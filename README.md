@@ -23,7 +23,7 @@ In order to use, just include the main [header](ECS-API/ECS/ecs.h) and use the n
 
 ## Important
 
-Is working only on 64bit platform due the usage of _BitScanForward64 (or __builtin_ctzll *nix systems)
+Is working on **64 bit platform only** due the usage of _BitScanForward64 (or __builtin_ctzll unix systems)
 
 ## How to import in your project
 

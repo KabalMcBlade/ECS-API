@@ -21,6 +21,9 @@ Whistl these are some [examples](ECS-API/main.cpp) of usage.
 
 In order to use, just include the main [header](ECS-API/ECS/ecs.h) and use the namespace `ecs` and you are good to go!
 
+## Important
+
+Is working only on 64bit platform due the usage of _BitScanForward64 (or __builtin_ctzll *nix systems)
 
 ## How to import in your project
 

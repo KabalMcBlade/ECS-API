@@ -2,15 +2,17 @@
 
 ECS-API is a ECS framework.
 It is build around 3 simple ideas:
-1. Optimized for space-time complexity
-	It is using the minimal storage space as possible and it using linear search complexity
-2. No boilerplate on the user side
-	Althought the API itself has quite of boilerplate, it is not the case for the user. This API is very straigforward to use but also has a very powerful and inexpensive implementation.
-3. Flexibility in order to deal with different implementations
-	This ECS is actually a EC, because the system are up to the user. THe API provides functions to add, remove, update, iterate, collect using idioms (any, all, not) the components associated to an entity, thus the entities and the components can be managed by any kind of function, aka system, implemented by user side.
+1. Optimised for space-time complexity<br>
+	It is using the minimal storage space as possible and it using linear search.
+2. No boilerplate on the user side<br>
+	Althought the API itself has quite of boilerplate, it is not the case for the user.<br>
+	This API is very straigforward to use but also has a very powerful and inexpensive implementation.
+3. Flexibility in order to deal with different implementations<br>
+	This ECS is actually a "EC", because the system are up to the user.<br>
+	The API provides functions to add, remove, update, iterate, collect using idioms (any, all, not) the components associated to an entity, thus the entities and the components can be managed by any functions, aka systems, implemented by user side, they do not require any "base class" or whatever.
 
-Is important to note that the entity is a 32bit struct, having a index of 24 bits and a version of 8 bits. 
-Whenever a already created entity got destroyed, when create a new one, the API will use the "spot" left free before, re-using the same index but incrementing the version.
+It is important to note that the entity data structure is a 32bit size, having a index of 24 bits and a version of 8 bits.<br>
+Whenever an already created entity got destroyed, when a new one is created, the API will use the "spot" left free by the previous one, re-using the same index but incrementing the version.<br>
 When the version reach the limit, simply wrap around and restart.
 
 
@@ -22,7 +24,7 @@ In order to use, just include the main [header](ECS-API/ECS/ecs.h) and use the n
 
 ## How to import in your project
 
-A way is cloning this repository in your project, but in that case need to remove/exclude from your project everything apart the folder ECS-API/ECS, but is not very pretty.
+A way is cloning this repository in your project, but in that case need to remove/exclude from your project everything apart the folder ECS-API/ECS, but is not very pretty.<br>
 A nice way instead, is simple to download or cloning this project somewhere locally and copy inside your own project the ECS folder containig ONLY the implementation of the API, the [ECS](ECS-API/ECS).
 
 
@@ -80,13 +82,13 @@ There are some steps to do at the beginning and some step to perform at the fina
 
 Apart the aformetioned functions to initialise, destroy, register and unregister components, this API has:
 
-- `ecs::ComponentManager::AddComponent`
+- `ecs::ComponentManager::AddComponent`<br>
 	Is adding a component to an entity, like `ecs::ComponentManager::AddComponent<Render>(player);`
-- `ecs::ComponentManager::RemoveComponent`
+- `ecs::ComponentManager::RemoveComponent`<br>
 	Is removing a component from an entity, like `ecs::ComponentManager::RemoveComponent<Render>(player);`
-- `ecs::ComponentManager::HasComponents`
+- `ecs::ComponentManager::HasComponents`<br>
 	Return true if an entity as a component, lile `const bool hasTransform = ecs::ComponentManager::HasComponents<Render>(player);`
-- `ecs::ComponentManager::GetComponent`
+- `ecs::ComponentManager::GetComponent`<br>
 	Return the reference to the component associated to the entity, like: `Render& render = ecs::ComponentManager::GetComponent<Render>(player);`
 - `ecs::ComponentManager::IterateEntitiesWithAll`
 	Iterate across all entities having **all/both** the component/s passed as template argument, anr return a reference to each entity, like:

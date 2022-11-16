@@ -16,7 +16,7 @@ Whenever an already created entity got destroyed, when a new one is created, the
 When the version reach the limit, simply wrap around and restart.
 
 
-The actual API can be found here: [ECS](ECS-API/ECS)
+The actual API can be found here: [ECS](ECS-API/ECS)<br>
 While here there are some [examples](ECS-API/main.cpp) of usage.
 
 In order to use, just include the main [header](ECS-API/ECS/ecs.h) and use the namespace `ecs` and you are good to go!

@@ -90,7 +90,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 - `ecs::ComponentManager::RemoveComponent`<br>
 	Is removing a component from an entity, like `ecs::ComponentManager::RemoveComponent<Render>(player);`
 - `ecs::ComponentManager::HasComponents`<br>
-	Return true if an entity as a component, lile `const bool hasTransform = ecs::ComponentManager::HasComponents<Render>(player);`
+	Return true if an entity as a component, lile `const bool hasRender = ecs::ComponentManager::HasComponents<Render>(player);`
 - `ecs::ComponentManager::GetComponent`<br>
 	Return the reference to the component associated to the entity, like: `Render& render = ecs::ComponentManager::GetComponent<Render>(player);`
 - `ecs::ComponentManager::IterateEntitiesWithAll`

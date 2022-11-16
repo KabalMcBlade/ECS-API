@@ -17,7 +17,7 @@ When the version reach the limit, simply wrap around and restart.
 
 
 The actual API can be found here: [ECS](ECS-API/ECS)
-Whistl these are some [examples](ECS-API/main.cpp) of usage.
+While here there are some [examples](ECS-API/main.cpp) of usage.
 
 In order to use, just include the main [header](ECS-API/ECS/ecs.h) and use the namespace `ecs` and you are good to go!
 

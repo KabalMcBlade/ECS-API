@@ -94,23 +94,23 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 - `ecs::ComponentManager::GetComponent`<br>
 	Return the reference to the component associated to the entity, like: `Render& render = ecs::ComponentManager::GetComponent<Render>(player);`
 - `ecs::ComponentManager::IterateEntitiesWithAll`
-	Iterate across all entities having **all/both** the component/s passed as template argument, anr return a reference to each entity, like:
+	Iterate across all entities having **all/both** the component/s passed as template argument, and returning each entity, like:
 	```cpp
 	for (auto iterator : ecs::IterateEntitiesWithAll<Transform, RigidBody, Health>())
 	{
-		// do something with iterator, which is a Entity
+		// do something with iterator, which is an Entity
 	}
 	```
 - `ecs::ComponentManager::IterateEntitiesWithAny`
-	Iterate across all entities having **any/either** of the component/s passed as template argument, anr return a reference to each entity, like:
+	Iterate across all entities having **any/either** of the component/s passed as template argument, and returning each entity, like:
 	```cpp
 	for (auto iterator : ecs::IterateEntitiesWithAny<Transform, RigidBody, Health, Render>())
 	{
-		// do something with iterator, which is a Entity
+		// do something with iterator, which is an Entity
 	}
 	```
 - `ecs::ComponentManager::IterateEntitiesWithNot`
-	Iterate across all entities **not** having **all/both** of the component/s passed as template argument, anr return a reference to each entity, like:
+	Iterate across all entities **not** having **all/both** of the component/s passed as template argument, and returning each entity, like:
 	```cpp
 	for (auto iterator : ecs::IterateEntitiesWithNot<Health>())
 	{
@@ -118,7 +118,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 	}
 	```
 - `ecs::ComponentManager::CollectEntitiesWithAll`
-	Collect in a std::vector every entities having **all/both** the component/s passed as template argument, like
+	Collect in a std::vector the entities having **all/both** the component/s passed as template argument, like
 	```cpp
 	std::vector<ecs::Entity> entitiesCollected;
 	...
@@ -130,7 +130,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 	entitiesCollected.clear();
 	```
 - `ecs::ComponentManager::CollectEntitiesWithAny`
-	Collect in a std::vector every entities having **any/either** the component/s passed as template argument, like
+	Collect in a std::vector the entities having **any/either** the component/s passed as template argument, like
 	```cpp
 	std::vector<ecs::Entity> entitiesCollected;
 	...
@@ -142,7 +142,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 	entitiesCollected.clear();
 	```
 - `ecs::ComponentManager::CollectEntitiesWithNot`
-	Collect in a std::vector every entities **not** having **all/both** the component/s passed as template argument, like
+	Collect in a std::vector the entities **not** having **all/both** the component/s passed as template argument, like
 	```cpp
 	std::vector<ecs::Entity> entitiesCollected;
 	...

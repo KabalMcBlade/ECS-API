@@ -133,7 +133,7 @@ int main()
 	ecs::Entity npc2 = ecs::EntityManager::CreateEntity();
 
 #ifdef _DEBUG
-	// the index is never updated, is unique, the version instead get updated when something changes (component added/removed) and is wrapping around the value
+	// the index is never updated, is unique, the version instead get updated when the entity get destroyed and created again, filling the spot left, and is wrapping around the value
 	std::cout << "camera = [Entity " << camera.GetIndex() << ":" << camera.GetVersion() << "]" << std::endl;
 	std::cout << "player = [Entity " << player.GetIndex() << ":" << player.GetVersion() << "]" << std::endl;
 	std::cout << "npc0 = [Entity " << npc0.GetIndex() << ":" << npc0.GetVersion() << "]" << std::endl;

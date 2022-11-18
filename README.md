@@ -58,11 +58,6 @@ There are some steps to do at the beginning and some step to perform at the fina
 	```
 
 3. Handle the different component per entity, adding, removing, updating, collecting, etc, see the next section functions to more details and the example in the [examples](ECS/main.cpp)
-	```cpp
-	ecs::Entity camera = ecs::EntityManager::CreateEntity();
-	ecs::Entity player = ecs::EntityManager::CreateEntity();
-	ecs::Entity ... = ecs::EntityManager::CreateEntity();
-	```
 
 4. When everything is finished and the program need to shut down, or simple no longer using some of the component or whataver, remember to remove them, for instance
 	```cpp

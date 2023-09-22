@@ -121,22 +121,22 @@ std::vector<T> ComponentManager::m_components;
 template<typename T>
 std::vector<uint64> ComponentManager::m_componentsIndices;
 
-std::vector<uint32> ComponentManager::m_componentHashId;
+inline std::vector<uint32> ComponentManager::m_componentHashId;
 
-uint16 ComponentManager::m_maxEntities;
+inline uint16 ComponentManager::m_maxEntities;
 
 
-void ComponentManager::Create(uint16 _maxEntities, uint16 _maxComponents)
+inline void ComponentManager::Create(uint16 _maxEntities, uint16 _maxComponents)
 {
-    m_maxEntities = _maxEntities;
-    assert(m_maxEntities <= kMaxEntities && "Max Entities exceeds the maximum number of entities!");
-    
-    m_componentHashId.reserve(_maxComponents);
+	m_maxEntities = _maxEntities;
+	assert(m_maxEntities <= kMaxEntities && "Max Entities exceeds the maximum number of entities!");
+
+	m_componentHashId.reserve(_maxComponents);
 }
 
-void ComponentManager::Destroy()
+inline void ComponentManager::Destroy()
 {
-    m_componentHashId.clear();
+	m_componentHashId.clear();
 }
 
 template<typename T>

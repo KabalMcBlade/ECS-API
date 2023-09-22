@@ -2,20 +2,26 @@
 
 #include <cassert>
 
+#define ECS_NAMESPACE_BEGIN namespace ecs {
+#define ECS_NAMESPACE_END };  
+
+
 // Check windows
 #if _WIN32
-#define FORCE_INLINE __forceinline
+#define ECS_FORCE_INLINE __forceinline
 #endif
 
 // Check GCC
 #if __GNUC__
-#define FORCE_INLINE __attribute__((always_inline)) inline
+#define ECS_FORCE_INLINE __attribute__((always_inline)) inline
 #endif
 
 
-#define ECS_NAMESPACE_BEGIN namespace ecs {
-#define ECS_NAMESPACE_END };  
+ECS_NAMESPACE_BEGIN
 
+/// <summary>
+/// TYPES
+/// </summary>
 
 typedef unsigned char uint8;
 typedef unsigned short uint16;
@@ -48,7 +54,10 @@ typedef int64 intptr;
 typedef intptr ptrdiff;
 
 
-ECS_NAMESPACE_BEGIN
+
+/// <summary>
+/// INTERNAL DATA
+/// </summary>
 
 static constexpr uint32 kMaxEntityIndex = 16777215u;
 
@@ -64,5 +73,6 @@ struct _EntityID
 };
 
 typedef _EntityID EntityId;
+
 
 ECS_NAMESPACE_END

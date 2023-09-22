@@ -49,13 +49,13 @@ private:
     static Entity GetEntity(const uint16 _entityIndex);
 };
 
-std::vector<uint64> EntityManager::m_entities;
-std::vector<uint8> EntityManager::m_entitiesVersion;
+inline std::vector<uint64> EntityManager::m_entities;
+inline std::vector<uint8> EntityManager::m_entitiesVersion;
 
-uint16 EntityManager::m_totalEntityCreated;
+inline uint16 EntityManager::m_totalEntityCreated;
 
 
-void EntityManager::Create(uint16 _maxEntities)
+inline void EntityManager::Create(uint16 _maxEntities)
 {
     assert(_maxEntities <= kMaxEntities && "_maxEntitis parameter exceeds the maximum number of entities which is 16777215!");
     
@@ -67,13 +67,13 @@ void EntityManager::Create(uint16 _maxEntities)
     m_entities.resize(capacity, 0u);
 }
 
-void EntityManager::Destroy()
+inline void EntityManager::Destroy()
 {
 	m_entities.clear();
 	m_entitiesVersion.clear();
 }
 
-Entity EntityManager::CreateEntity()
+inline Entity EntityManager::CreateEntity()
 {
 	uint16 index = 0;
 	for (const uint64 block : m_entities)
@@ -98,7 +98,7 @@ Entity EntityManager::CreateEntity()
 	return { index, m_entitiesVersion[index] };
 }
 
-void EntityManager::DestroyEntity(const Entity _entity)
+inline void EntityManager::DestroyEntity(const Entity _entity)
 {
     --m_totalEntityCreated;
     
@@ -112,12 +112,12 @@ void EntityManager::DestroyEntity(const Entity _entity)
     m_entities[index / 64u] &= ~(1ull << (index % 64u));
 }
 
-bool EntityManager::ExistEntity(const uint16 _entityIndex)
+inline bool EntityManager::ExistEntity(const uint16 _entityIndex)
 {
     return (m_entities[_entityIndex / 64u] & (1ull << (_entityIndex % 64u))) != 0u;
 }
 
-Entity EntityManager::GetEntity(const uint16 _entityIndex)
+inline Entity EntityManager::GetEntity(const uint16 _entityIndex)
 {
     assert(_entityIndex >= 0 && _entityIndex < kMaxEntities && "Entity index out of range!");
     assert(ExistEntity(_entityIndex) && "Entity index does not exist!");

@@ -5,12 +5,6 @@
 #define ECS_NAMESPACE_BEGIN namespace ecs {
 #define ECS_NAMESPACE_END };  
 
-// Precompiled headers
-// Due the nature of the library, we need translation units, but depending by the project linked if any,
-// might have or not, hence we use this macro which has to be 
-// PLEASE SET THIS ON PROJECT LEVEL OR MAKE FILE TO AVOID TO CHANGE THIS CODE!
-//#define ECS_USE_PCH
-
 
 // Check windows
 #if _WIN32

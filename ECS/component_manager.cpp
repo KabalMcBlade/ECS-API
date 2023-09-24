@@ -1,6 +1,4 @@
-#ifdef ECS_USE_PCH
-#include "pch.h"
-#endif
+//#include "pch.h"
 #include "component_manager.h"
 
 ECS_NAMESPACE_BEGIN

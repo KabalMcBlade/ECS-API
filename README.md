@@ -25,9 +25,15 @@ In order to use, just include the main [header](ECS-API/ECS/ecs.h) and use the n
 
 Is working on **64 bit platform only** due the usage of _BitScanForward64 (or __builtin_ctzll unix systems)
 
+
+## Important Compilation info
+
+**Due the nature of the library and where you can link this against to, you have to add the processor ECS_EXPORTS to avoid linkage error.**<br>
+**Also, in case your project is using precompiled headers, remember to add the header file in the translation units component_manager.cpp and entity_manager.cpp
+
+
 ## How to import in your project
 
-**Due the nature of the library and where you can link this against to, you have to add the processor ECS_EXPORTS to avoid linkage error and in case your project is using precompiled headers (for now pch file only, but easy to extent), please add the preprocessor ECS_USE_PCH.**<br>
 A way is cloning this repository in your project, but in that case need to remove/exclude from your project everything apart the folder ECS-API/ECS, but is not very pretty.<br>
 A nice way instead, is simple to download or cloning this project somewhere locally and copy inside your own project the ECS folder containig ONLY the implementation of the API, the [ECS](ECS-API/ECS).
 

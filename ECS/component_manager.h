@@ -10,21 +10,28 @@
 #include <cstring>
 #include <algorithm>
 
+
 ECS_NAMESPACE_BEGIN
 
-class ComponentManager
+namespace ComponentManager
 {
-public:
-    ComponentManager() = delete;
-	~ComponentManager() = delete;
-	
-	ComponentManager(const ComponentManager& _other) = delete;
-	ComponentManager& operator=(const ComponentManager& _other) = delete;
-	ComponentManager(ComponentManager&& _other) = delete;
-	ComponentManager& operator=(ComponentManager&& _other) = delete;
-	
-	static void Create(uint16 _maxEntities, uint16 _maxComponents);
-	static void Destroy();
+    ECS_DLL extern std::vector<uint32> m_componentHashId;
+    ECS_DLL extern uint16 m_maxEntities;
+
+    ///
+
+	inline void Create(uint16 _maxEntities, uint16 _maxComponents)
+	{
+		m_maxEntities = _maxEntities;
+		assert(m_maxEntities <= kMaxEntities && "Max Entities exceeds the maximum number of entities!");
+
+		m_componentHashId.reserve(_maxComponents);
+	}
+
+	inline void Destroy()
+	{
+		m_componentHashId.clear();
+	}
 	
 	template <typename T>
     static void RegisterComponent();
@@ -101,43 +108,15 @@ public:
     template <typename T1, typename T2, typename... Args>
     static bool HasNotComponents(const uint16 _entityIndex);
     
-private:
-    template<typename T>
-    static std::vector<T> m_components;
+
+    ///
 
     template<typename T>
-    static std::vector<uint64> m_componentsIndices;
-    
-    static std::vector<uint32> m_componentHashId;
-    
-    static uint16 m_maxEntities;
-    
-    friend class EntityCollector;
+    ECS_DLL std::vector<T> m_components;
+
+    template<typename T>
+    ECS_DLL std::vector<uint64> m_componentsIndices;
 };
-
-template<typename T> 
-std::vector<T> ComponentManager::m_components;
-
-template<typename T>
-std::vector<uint64> ComponentManager::m_componentsIndices;
-
-inline std::vector<uint32> ComponentManager::m_componentHashId;
-
-inline uint16 ComponentManager::m_maxEntities;
-
-
-inline void ComponentManager::Create(uint16 _maxEntities, uint16 _maxComponents)
-{
-	m_maxEntities = _maxEntities;
-	assert(m_maxEntities <= kMaxEntities && "Max Entities exceeds the maximum number of entities!");
-
-	m_componentHashId.reserve(_maxComponents);
-}
-
-inline void ComponentManager::Destroy()
-{
-	m_componentHashId.clear();
-}
 
 template<typename T>
 void ComponentManager::RegisterComponent()

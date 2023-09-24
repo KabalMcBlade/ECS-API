@@ -5,6 +5,12 @@
 #define ECS_NAMESPACE_BEGIN namespace ecs {
 #define ECS_NAMESPACE_END };  
 
+// Precompiled headers
+// Due the nature of the library, we need translation units, but depending by the project linked if any,
+// might have or not, hence we use this macro which has to be 
+// PLEASE SET THIS ON PROJECT LEVEL OR MAKE FILE TO AVOID TO CHANGE THIS CODE!
+//#define ECS_USE_PCH
+
 
 // Check windows
 #if _WIN32
@@ -16,6 +22,13 @@
 #define ECS_FORCE_INLINE __attribute__((always_inline)) inline
 #endif
 
+#ifdef ECS_EXPORTS
+#define ECS_DLL __declspec(dllexport)
+#define ECS_TEMPLATE
+#else
+#define ECS_DLL __declspec(dllimport)
+#define ECS_TEMPLATE extern
+#endif 
 
 ECS_NAMESPACE_BEGIN
 

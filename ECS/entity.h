@@ -15,40 +15,34 @@ class Entity
 public:
     Entity() = delete;
     
-	bool operator==(const Entity _other) const
+	ECS_FORCE_INLINE bool operator==(const Entity _other) const
 	{
 		return m_id.m_index == _other.m_id.m_index && m_id.m_version == _other.m_id.m_version;
 	}
 
-	bool operator!=(const Entity _other) const
+	ECS_FORCE_INLINE bool operator!=(const Entity _other) const
 	{
 		return !((*this) == _other);
 	}
 
-	bool IsValid() const
+	ECS_FORCE_INLINE bool IsValid() const
 	{
 		return m_id.m_index >= 0u && m_id.m_version > 0u;
 	}
 
-	uint32 GetIndex() const
+	ECS_FORCE_INLINE uint32 GetIndex() const
 	{
 		return static_cast<uint32>(m_id.m_index);
 	}
 
-	uint32 GetVersion() const
+	ECS_FORCE_INLINE uint32 GetVersion() const
 	{
 		return static_cast<uint32>(m_id.m_version);
 	}
 
-
-private:
-	// For the CollectEntitiesWithAll only!
 	Entity(uint16 _index, uint8 _version) : m_id({ _index, _version }) { }
     
     EntityId m_id;
-    
-    friend class EntityManager;
-    friend class ComponentManager;
     
     template<typename T, typename... Args>
     friend class IterateEntitiesWithAll;

@@ -64,7 +64,7 @@ There are some steps to do at the beginning and some step to perform at the fina
 	ecs::Entity ... = ecs::EntityManager::CreateEntity();
 	```
 
-3. Handle the different component per entity, adding, removing, updating, collecting, etc, see the next section functions to more details and the example in the [examples](ECS/main.cpp)
+3. Handle the different component per entity, adding, removing, updating, collecting, etc, see the next section functions to more details and the example in the [examples](https://github.com/KabalMcBlade/ECS-API/blob/main/main.cpp)
 
 4. When everything is finished and the program need to shut down, or simple no longer using some of the component or whataver, remember to remove them, for instance
 	```cpp

@@ -12,83 +12,39 @@
 
 ECS_NAMESPACE_BEGIN
 
-namespace EntityManager
+class EntityManager
 {
-	ECS_DLL extern std::vector<uint64> m_entities;
-	ECS_DLL extern std::vector<uint8> m_entitiesVersion;
-	ECS_DLL extern uint16 m_totalEntityCreated;
-
-	////////////////////////////////////////////////
-
-	inline void Create(uint16 _maxEntities)
+public:
+	static EntityManager& Instance()
 	{
-		assert(_maxEntities <= kMaxEntities && "_maxEntitis parameter exceeds the maximum number of entities which is 16777215!");
-
-		m_totalEntityCreated = 0;
-
-		m_entitiesVersion.resize(_maxEntities, 1u);
-
-		const uint32 capacity = GetRequiredAmountOfUint64ToStoreBits(_maxEntities);
-		m_entities.resize(capacity, 0u);
+		static EntityManager instance;
+		return instance;
 	}
 
-	inline void Destroy()
-	{
-		m_entities.clear();
-		m_entitiesVersion.clear();
-	}
+	void Create(uint16 _maxEntities);
+	void Destroy();
 
-	inline Entity CreateEntity()
-	{
-		uint16 index = 0;
-		for (const uint64 block : m_entities)
-		{
-			const uint64 invertedBlock = ~block;
-			if (invertedBlock != 0)
-			{
-				index += static_cast<uint16>(CountTrailingZeros64(invertedBlock));
-				break;
-			}
+	Entity CreateEntity();
+	void DestroyEntity(const Entity _entity);
+	bool ExistEntity(const uint16 _entityIndex);
+	Entity GetEntity(const uint16 _entityIndex);
 
-			index += 64u;
-		}
+	ECS_FORCE_INLINE uint16 GetTotalEntityCreated() const { return m_totalEntityCreated; }
 
-		assert(index < kMaxEntities && "Cannot create more entity!");
+	ECS_FORCE_INLINE const std::vector<uint64>& GetEntities() { return m_entities; }
 
-		++m_totalEntityCreated;
+private:
+	EntityManager() = default;
+	~EntityManager() = default;
 
-		// set bit
-		m_entities[index / 64u] |= (1ull << (index % 64u));
+	EntityManager(const EntityManager&) = delete;
+	EntityManager& operator=(const EntityManager&) = delete;
 
-		return { index, m_entitiesVersion[index] };
-	}
-
-	inline void DestroyEntity(const Entity _entity)
-	{
-		--m_totalEntityCreated;
-
-		const uint32 index = _entity.GetIndex();
-
-		uint8& version = m_entitiesVersion[index];
-		version %= 255u;
-		++version;
-
-		// clear bit
-		m_entities[index / 64u] &= ~(1ull << (index % 64u));
-	}
-
-	inline bool ExistEntity(const uint16 _entityIndex)
-	{
-		return (m_entities[_entityIndex / 64u] & (1ull << (_entityIndex % 64u))) != 0u;
-	}
-
-	inline Entity GetEntity(const uint16 _entityIndex)
-	{
-		assert(_entityIndex >= 0 && _entityIndex < kMaxEntities && "Entity index out of range!");
-		assert(ExistEntity(_entityIndex) && "Entity index does not exist!");
-
-		return { _entityIndex, m_entitiesVersion[_entityIndex] };
-	}
+	std::vector<uint64> m_entities;
+	std::vector<uint8> m_entitiesVersion;
+	uint16 m_totalEntityCreated = 0;
 };
+
+ECS_DLL EntityManager& GetEntityManager();
 
 ECS_NAMESPACE_END

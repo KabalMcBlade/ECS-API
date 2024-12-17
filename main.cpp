@@ -112,25 +112,29 @@ int main()
 
 
 	//////////////////////////////////////////////////////////////////////////
+	// 1. Get the managers
+	ecs::ComponentManager& componentManager = ecs::GetComponentManager();
+	ecs::EntityManager& entityManager = ecs::GetEntityManager();
 
-	// 1. Create the Entity Manager and the Component Manager
-	ecs::EntityManager::Create(MAX_ENTITY_COUNT);
-	ecs::ComponentManager::Create(MAX_ENTITY_COUNT, MAX_COMPONENT_PER_ENTITY_COUNT);
 
-	// 2. Register all the components into the Component Manager
-	ecs::ComponentManager::RegisterComponent<Transform>();
-	ecs::ComponentManager::RegisterComponent<Kinematic>();
-	ecs::ComponentManager::RegisterComponent<RigidBody>();
-	ecs::ComponentManager::RegisterComponent<Health>();
-	ecs::ComponentManager::RegisterComponent<Camera>();
-	ecs::ComponentManager::RegisterComponent<Render>();
+	// 2. Create the Entity Manager and the Component Manager
+	entityManager.Create(MAX_ENTITY_COUNT);
+	componentManager.Create(MAX_ENTITY_COUNT, MAX_COMPONENT_PER_ENTITY_COUNT);
 
-	// 3. From this point on is more "game side" related, we create a bunch of entities
-	ecs::Entity camera = ecs::EntityManager::CreateEntity();
-	ecs::Entity player = ecs::EntityManager::CreateEntity();
-	ecs::Entity npc0 = ecs::EntityManager::CreateEntity();
-	ecs::Entity npc1 = ecs::EntityManager::CreateEntity();
-	ecs::Entity npc2 = ecs::EntityManager::CreateEntity();
+	// 3. Register all the components into the Component Manager
+	componentManager.RegisterComponent<Transform>();
+	componentManager.RegisterComponent<Kinematic>();
+	componentManager.RegisterComponent<RigidBody>();
+	componentManager.RegisterComponent<Health>();
+	componentManager.RegisterComponent<Camera>();
+	componentManager.RegisterComponent<Render>();
+
+	// 4. From this point on is more "game side" related, we create a bunch of entities
+	ecs::Entity camera = entityManager.CreateEntity();
+	ecs::Entity player = entityManager.CreateEntity();
+	ecs::Entity npc0 = entityManager.CreateEntity();
+	ecs::Entity npc1 = entityManager.CreateEntity();
+	ecs::Entity npc2 = entityManager.CreateEntity();
 
 #ifdef _DEBUG
 	// the index is never updated, is unique, the version instead get updated when the entity get destroyed and created again, filling the spot left, and is wrapping around the value
@@ -146,53 +150,53 @@ int main()
 	// Phase one -  Adding component to entities
 	
 	// Transform to:
-	ecs::ComponentManager::AddComponent<Transform>(camera, Transform{ Quaternion { 0.989f, Vector{ -0.065f, -0.010f, -0.130f } }, Vector { 0.0f, 4.0f, -5.0f }});
-	ecs::ComponentManager::AddComponent<Transform>(player, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 0.0f, 0.0f, 0.0f }});
-	ecs::ComponentManager::AddComponent<Transform>(npc0, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 4.0f, 0.0f, 6.0f } });
-	ecs::ComponentManager::AddComponent<Transform>(npc1, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 8.0f, 0.0f, 10.0f } });
-	ecs::ComponentManager::AddComponent<Transform>(npc2, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 15.0f, 0.0f, 5.0f } });
+	componentManager.AddComponent<Transform>(camera, Transform{ Quaternion { 0.989f, Vector{ -0.065f, -0.010f, -0.130f } }, Vector { 0.0f, 4.0f, -5.0f }});
+	componentManager.AddComponent<Transform>(player, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 0.0f, 0.0f, 0.0f }});
+	componentManager.AddComponent<Transform>(npc0, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 4.0f, 0.0f, 6.0f } });
+	componentManager.AddComponent<Transform>(npc1, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 8.0f, 0.0f, 10.0f } });
+	componentManager.AddComponent<Transform>(npc2, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 15.0f, 0.0f, 5.0f } });
 	
 	// Kinematic to:
-	ecs::ComponentManager::AddComponent<Kinematic>(camera, Kinematic{ Vector{ 0.0f, 0.0f, 0.0f}, Vector{ 0.0f, 0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, 0.0f });
-	ecs::ComponentManager::AddComponent<Kinematic>(player, Kinematic{ Vector{ 0.0f, 0.0f, 0.0f}, Vector{ 0.0f, 0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, 0.0f });
-	ecs::ComponentManager::AddComponent<Kinematic>(npc0, Kinematic{ Vector{ 0.0f, 0.0f, 0.0f}, Vector{ 0.0f, 0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, 0.0f });
-	ecs::ComponentManager::AddComponent<Kinematic>(npc1, Kinematic{ Vector{ 0.0f, 0.0f, 0.0f}, Vector{ 0.0f, 0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, 0.0f });
-	ecs::ComponentManager::AddComponent<Kinematic>(npc2, Kinematic{ Vector{ 0.0f, 0.0f, 0.0f}, Vector{ 0.0f, 0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, 0.0f });
+	componentManager.AddComponent<Kinematic>(camera, Kinematic{ Vector{ 0.0f, 0.0f, 0.0f}, Vector{ 0.0f, 0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, 0.0f });
+	componentManager.AddComponent<Kinematic>(player, Kinematic{ Vector{ 0.0f, 0.0f, 0.0f}, Vector{ 0.0f, 0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, 0.0f });
+	componentManager.AddComponent<Kinematic>(npc0, Kinematic{ Vector{ 0.0f, 0.0f, 0.0f}, Vector{ 0.0f, 0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, 0.0f });
+	componentManager.AddComponent<Kinematic>(npc1, Kinematic{ Vector{ 0.0f, 0.0f, 0.0f}, Vector{ 0.0f, 0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, 0.0f });
+	componentManager.AddComponent<Kinematic>(npc2, Kinematic{ Vector{ 0.0f, 0.0f, 0.0f}, Vector{ 0.0f, 0.0f, 0.0f}, 0.0f, 0.0f, 0.0f, 0.0f });
 
 	// RigidBody to:
-	ecs::ComponentManager::AddComponent<RigidBody>(npc0);
-	ecs::ComponentManager::AddComponent<RigidBody>(npc1);
-	ecs::ComponentManager::AddComponent<RigidBody>(npc2);
+	componentManager.AddComponent<RigidBody>(npc0);
+	componentManager.AddComponent<RigidBody>(npc1);
+	componentManager.AddComponent<RigidBody>(npc2);
 
 	// Health to:
-	ecs::ComponentManager::AddComponent<Health>(player, Health{1.0f, dist(mt) });
-	ecs::ComponentManager::AddComponent<Health>(npc0, Health{ 1.0f, dist(mt) });
-	ecs::ComponentManager::AddComponent<Health>(npc1, Health{ 1.0f, dist(mt) });
-	ecs::ComponentManager::AddComponent<Health>(npc2, Health{ 1.0f, dist(mt) });
+	componentManager.AddComponent<Health>(player, Health{1.0f, dist(mt) });
+	componentManager.AddComponent<Health>(npc0, Health{ 1.0f, dist(mt) });
+	componentManager.AddComponent<Health>(npc1, Health{ 1.0f, dist(mt) });
+	componentManager.AddComponent<Health>(npc2, Health{ 1.0f, dist(mt) });
 
 	// Camera to (notice has no data for test purpose):
-	ecs::ComponentManager::AddComponent<Camera>(camera);
-	ecs::ComponentManager::AddComponent<Camera>(player);
+	componentManager.AddComponent<Camera>(camera);
+	componentManager.AddComponent<Camera>(player);
 
 	// Render to (notice has no data for test purpose):
-	ecs::ComponentManager::AddComponent<Render>(player);
-	ecs::ComponentManager::AddComponent<Render>(npc0);
-	ecs::ComponentManager::AddComponent<Render>(npc1);
-	ecs::ComponentManager::AddComponent<Render>(npc2);
+	componentManager.AddComponent<Render>(player);
+	componentManager.AddComponent<Render>(npc0);
+	componentManager.AddComponent<Render>(npc1);
+	componentManager.AddComponent<Render>(npc2);
 
 	
 	//////////////////////////////////////////////////////////////////////////
 	// TEST 1: Checking data manually entered (Transform and Health) knowing the entities where they belong to
-	Transform& camera_transform = ecs::ComponentManager::GetComponent<Transform>(camera);
-	Transform& player_transform = ecs::ComponentManager::GetComponent<Transform>(player);
-	Transform& npc0_transform = ecs::ComponentManager::GetComponent<Transform>(npc0);
-	Transform& npc1_transform = ecs::ComponentManager::GetComponent<Transform>(npc1);
-	Transform& npc2_transform = ecs::ComponentManager::GetComponent<Transform>(npc2);
+	Transform& camera_transform = componentManager.GetComponent<Transform>(camera);
+	Transform& player_transform = componentManager.GetComponent<Transform>(player);
+	Transform& npc0_transform = componentManager.GetComponent<Transform>(npc0);
+	Transform& npc1_transform = componentManager.GetComponent<Transform>(npc1);
+	Transform& npc2_transform = componentManager.GetComponent<Transform>(npc2);
 
-	Health& player_health = ecs::ComponentManager::GetComponent<Health>(player);
-	Health& npc0_health = ecs::ComponentManager::GetComponent<Health>(npc0);
-	Health& npc1_health = ecs::ComponentManager::GetComponent<Health>(npc1);
-	Health& npc2_health = ecs::ComponentManager::GetComponent<Health>(npc2);
+	Health& player_health = componentManager.GetComponent<Health>(player);
+	Health& npc0_health = componentManager.GetComponent<Health>(npc0);
+	Health& npc1_health = componentManager.GetComponent<Health>(npc1);
+	Health& npc2_health = componentManager.GetComponent<Health>(npc2);
 
 
 #ifdef _DEBUG
@@ -251,9 +255,9 @@ int main()
 	//////////////////////////////////////////////////////////////////////////
 	// TEST 3: Remove component Transform from NPCs and adding back
 
-	bool npc0_hasTransform = ecs::ComponentManager::HasComponents<Transform>(npc0);
-	bool npc1_hasTransform = ecs::ComponentManager::HasComponents<Transform>(npc1);
-	bool npc2_hasTransform = ecs::ComponentManager::HasComponents<Transform>(npc2);
+	bool npc0_hasTransform = componentManager.HasComponents<Transform>(npc0);
+	bool npc1_hasTransform = componentManager.HasComponents<Transform>(npc1);
+	bool npc2_hasTransform = componentManager.HasComponents<Transform>(npc2);
 
 #ifdef _DEBUG
 	std::cout << "TEST 3: Check that NPCs get Transform component attached" << std::endl << std::endl;
@@ -264,13 +268,13 @@ int main()
 	std::cout << std::endl << std::endl;
 #endif
 
-	ecs::ComponentManager::RemoveComponent<Transform>(npc0);
-	ecs::ComponentManager::RemoveComponent<Transform>(npc1);
-	ecs::ComponentManager::RemoveComponent<Transform>(npc2);
+	componentManager.RemoveComponent<Transform>(npc0);
+	componentManager.RemoveComponent<Transform>(npc1);
+	componentManager.RemoveComponent<Transform>(npc2);
 
-	npc0_hasTransform = ecs::ComponentManager::HasComponents<Transform>(npc0);
-	npc1_hasTransform = ecs::ComponentManager::HasComponents<Transform>(npc1);
-	npc2_hasTransform = ecs::ComponentManager::HasComponents<Transform>(npc2);
+	npc0_hasTransform = componentManager.HasComponents<Transform>(npc0);
+	npc1_hasTransform = componentManager.HasComponents<Transform>(npc1);
+	npc2_hasTransform = componentManager.HasComponents<Transform>(npc2);
 
 #ifdef _DEBUG
 	std::cout << "TEST 3 Cont'd: The Transform component has been removed, check if it is gone" << std::endl << std::endl;
@@ -281,13 +285,13 @@ int main()
 	std::cout << std::endl << std::endl;
 #endif
 
-	ecs::ComponentManager::AddComponent<Transform>(npc0, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 7.0f, 2.0f, 7.0f } });
-	ecs::ComponentManager::AddComponent<Transform>(npc1, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 2.0f, 1.0f, 9.0f } });
-	ecs::ComponentManager::AddComponent<Transform>(npc2, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 5.0f, 4.0f, 2.0f } });
+	componentManager.AddComponent<Transform>(npc0, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 7.0f, 2.0f, 7.0f } });
+	componentManager.AddComponent<Transform>(npc1, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 2.0f, 1.0f, 9.0f } });
+	componentManager.AddComponent<Transform>(npc2, Transform{ Quaternion { 1.0f, Vector{ 0.0f, 0.0f, 0.0f } }, Vector { 5.0f, 4.0f, 2.0f } });
 
-	npc0_hasTransform = ecs::ComponentManager::HasComponents<Transform>(npc0);
-	npc1_hasTransform = ecs::ComponentManager::HasComponents<Transform>(npc1);
-	npc2_hasTransform = ecs::ComponentManager::HasComponents<Transform>(npc2);
+	npc0_hasTransform = componentManager.HasComponents<Transform>(npc0);
+	npc1_hasTransform = componentManager.HasComponents<Transform>(npc1);
+	npc2_hasTransform = componentManager.HasComponents<Transform>(npc2);
 
 #ifdef _DEBUG
 	std::cout << "TEST 3 Cont'd: The Transform component has been added back, check if is back again" << std::endl << std::endl;
@@ -433,9 +437,9 @@ int main()
 	std::cout << "TEST 9: Destroy an entity and create it again, The current version is: " << std::endl;
 	std::cout << "npc0 = [Entity " << npc0.GetIndex() << ":" << npc0.GetVersion() << "]" << std::endl;
 
-	ecs::EntityManager::DestroyEntity(npc0);
+	entityManager.DestroyEntity(npc0);
 
-	npc0 = ecs::EntityManager::CreateEntity();
+	npc0 = entityManager.CreateEntity();
 
 	std::cout << "The new version is: " << std::endl;
 	std::cout << "npc0 = [Entity " << npc0.GetIndex() << ":" << npc0.GetVersion() << "]" << std::endl;
@@ -444,16 +448,16 @@ int main()
 #endif
 
 
-	ecs::ComponentManager::UnregisterComponent<Transform>();
-	ecs::ComponentManager::UnregisterComponent<Kinematic>();
-	ecs::ComponentManager::UnregisterComponent<RigidBody>();
-	ecs::ComponentManager::UnregisterComponent<Health>();
-	ecs::ComponentManager::UnregisterComponent<Camera>();
-	ecs::ComponentManager::UnregisterComponent<Render>();
+	componentManager.UnregisterComponent<Transform>();
+	componentManager.UnregisterComponent<Kinematic>();
+	componentManager.UnregisterComponent<RigidBody>();
+	componentManager.UnregisterComponent<Health>();
+	componentManager.UnregisterComponent<Camera>();
+	componentManager.UnregisterComponent<Render>();
 
 
-	ecs::ComponentManager::Destroy();
-	ecs::EntityManager::Destroy();
+	componentManager.Destroy();
+	entityManager.Destroy();
 
 	return 0;
 }

@@ -33,7 +33,7 @@ template<typename T, typename... Args>
 void EntityCollector::CollectEntitiesWithAll(std::vector<Entity>& _outEntities)
 {
     uint16 index = 0;
-	for (uint64 block : EntityManager::m_entities)
+	for (uint64 block : GetEntityManager().GetEntities())
 	{
 		while (block != 0)
 		{
@@ -42,10 +42,12 @@ void EntityCollector::CollectEntitiesWithAll(std::vector<Entity>& _outEntities)
 			
 			const uint16 currentId = bitIndex + index;
 			
-		    const bool has = ComponentManager::HasComponents<T, Args...>(currentId);
+		    const bool has = GetComponentManager().HasComponents<T, Args...>(currentId);
 		    
 		    if (has)
-		        _outEntities.push_back(EntityManager::GetEntity(currentId));
+			{
+		        _outEntities.push_back(GetEntityManager().GetEntity(currentId));
+			}
 		}
 		index += 64u;
 	}
@@ -55,7 +57,7 @@ template<typename T, typename... Args>
 void EntityCollector::CollectEntitiesWithAny(std::vector<Entity>& _outEntities)
 {
     uint16 index = 0;
-	for (uint64 block : EntityManager::m_entities)
+	for (uint64 block : GetEntityManager().GetEntities())
 	{
 		while (block != 0)
 		{
@@ -64,10 +66,12 @@ void EntityCollector::CollectEntitiesWithAny(std::vector<Entity>& _outEntities)
 			
 			const uint16 currentId = bitIndex + index;
 			
-		    const bool hasAny = ComponentManager::HasAnyComponents<T, Args...>(currentId);
+		    const bool hasAny = GetComponentManager().HasAnyComponents<T, Args...>(currentId);
 		    
 		    if (hasAny)
-		        _outEntities.push_back(EntityManager::GetEntity(currentId));
+			{
+		        _outEntities.push_back(GetEntityManager().GetEntity(currentId));
+			}
 		}
 		index += 64u;
 	}
@@ -77,7 +81,7 @@ template<typename T, typename... Args>
 void EntityCollector::CollectEntitiesWithNot(std::vector<Entity>& _outEntities)
 {
     uint16 index = 0;
-	for (uint64 block : EntityManager::m_entities)
+	for (uint64 block : GetEntityManager().GetEntities())
 	{
 		while (block != 0)
 		{
@@ -86,10 +90,12 @@ void EntityCollector::CollectEntitiesWithNot(std::vector<Entity>& _outEntities)
 			
 			const uint16 currentId = bitIndex + index;
 			
-		    const bool hasNot = ComponentManager::HasNotComponents<T, Args...>(currentId);
+		    const bool hasNot = GetComponentManager().HasNotComponents<T, Args...>(currentId);
 		    
 		    if (hasNot)
-		        _outEntities.push_back(EntityManager::GetEntity(currentId));
+			{
+		        _outEntities.push_back(GetEntityManager().GetEntity(currentId));
+			}
 		}
 		index += 64u;
 	}

@@ -29,57 +29,64 @@ Is working on **64 bit platform only** due the usage of _BitScanForward64 (or __
 ## Important Compilation info
 
 **Due the nature of the library and where you can link this against to, you have to add the processor ECS_EXPORTS to avoid linkage error.**<br>
-**Also, in case your project is using precompiled headers, remember to add the header file in the translation units component_manager.cpp and entity_manager.cpp**
+**This library does not use precompiled headers**
 
 
 ## How to import in your project
 
-A way is cloning this repository in your project, but in that case need to remove/exclude from your project everything apart the folder ECS-API/ECS, but is not very pretty. Also it needs to change if using precompiled headers or not, which might result in having local changes into your project without been able to submit.<br>
-A nice way instead, is simple to download or cloning this project somewhere locally and copy inside your own project the ECS folder containig ONLY the implementation of the API, the [ECS](ECS-API/ECS).
+A way is cloning this repository in your project, but in that case need to remove/exclude from your project everything apart the folder ECS-API/ECS, but is not very pretty, because git will notice the change.<br>
+A nice way instead, is simple to download or cloning this project somewhere locally and copy inside your own project the ECS folder containig ONLY the implementation of the API, the [ECS](ECS-API/ECS).<br>
+Anyway is up to you, is still very self contained library!
 
 
 ## How to use
 
 There are some steps to do at the beginning and some step to perform at the finalization. These are:
 
-1. Create the Entity Manager and the Component Manager, passing a max entity count and a max component per entity count. These 2 values are the limits of the entities and the limits of component per entity
+1. Get the singletons, which are responsable for everything, much better than keep calling the getter!
 	```cpp
-	ecs::EntityManager::Create(100u);
-	ecs::ComponentManager::Create(100u, 32u);
-	```
-2. Register all the components which are going to be used during the program into the Component Manager, for instance
-	```cpp
-	ecs::ComponentManager::RegisterComponent<Transform>();
-	ecs::ComponentManager::RegisterComponent<Kinematic>();
-	ecs::ComponentManager::RegisterComponent<RigidBody>();
-	ecs::ComponentManager::RegisterComponent<Health>();
-	ecs::ComponentManager::RegisterComponent<Camera>();
-	ecs::ComponentManager::RegisterComponent<Render>();
-	ecs::ComponentManager::RegisterComponent<...>();
-	```
-3. After this point, create the entity whenever the program needs, for instance
-	```cpp
-	ecs::Entity camera = ecs::EntityManager::CreateEntity();
-	ecs::Entity player = ecs::EntityManager::CreateEntity();
-	ecs::Entity ... = ecs::EntityManager::CreateEntity();
+	ecs::ComponentManager& componentManager = ecs::GetComponentManager();
+	ecs::EntityManager& entityManager = ecs::GetEntityManager();
 	```
 
-3. Handle the different component per entity, adding, removing, updating, collecting, etc, see the next section functions to more details and the example in the [examples](https://github.com/KabalMcBlade/ECS-API/blob/main/main.cpp)
-
-4. When everything is finished and the program need to shut down, or simple no longer using some of the component or whataver, remember to remove them, for instance
+2. Create the Entity Manager and the Component Manager, passing a max entity count and a max component per entity count. These 2 values are the limits of the entities and the limits of component per entity
 	```cpp
-	ecs::ComponentManager::UnregisterComponent<Transform>();
-	ecs::ComponentManager::UnregisterComponent<Kinematic>();
-	ecs::ComponentManager::UnregisterComponent<RigidBody>();
-	ecs::ComponentManager::UnregisterComponent<Health>();
-	ecs::ComponentManager::UnregisterComponent<Camera>();
-	ecs::ComponentManager::UnregisterComponent<Render>();
+	entityManager.Create(100u);
+	componentManager.Create(100u, 32u);
+	```
+3. Register all the components which are going to be used during the program into the Component Manager, for instance
+	```cpp
+	componentManager.RegisterComponent<Transform>();
+	componentManager.RegisterComponent<Kinematic>();
+	componentManager.RegisterComponent<RigidBody>();
+	componentManager.RegisterComponent<Health>();
+	componentManager.RegisterComponent<Camera>();
+	componentManager.RegisterComponent<Render>();
+	componentManager.RegisterComponent<...>();
+	```
+4. After this point, create the entity whenever the program needs, for instance
+	```cpp
+	ecs::Entity camera = entityManager.CreateEntity();
+	ecs::Entity player = entityManager.CreateEntity();
+	ecs::Entity ... = entityManager.CreateEntity();
 	```
 
-5. At shutdown of the program, destroy the Entity Manager and the Component Manager
+5. Handle the different component per entity, adding, removing, updating, collecting, etc, see the next section functions to more details and the example in the [examples](https://github.com/KabalMcBlade/ECS-API/blob/main/main.cpp)
+
+6. When everything is finished and the program need to shut down, or simple no longer using some of the component or whataver, remember to remove them, for instance
 	```cpp
-	ecs::ComponentManager::Destroy();
-	ecs::EntityManager::Destroy();
+	componentManager.UnregisterComponent<Transform>();
+	componentManager.UnregisterComponent<Kinematic>();
+	componentManager.UnregisterComponent<RigidBody>();
+	componentManager.UnregisterComponent<Health>();
+	componentManager.UnregisterComponent<Camera>();
+	componentManager.UnregisterComponent<Render>();
+	```
+
+7. At shutdown of the program, destroy the Entity Manager and the Component Manager
+	```cpp
+	componentManager.Destroy();
+	entityManager.Destroy();
 	```
 
 
@@ -87,15 +94,15 @@ There are some steps to do at the beginning and some step to perform at the fina
 
 Apart the aformetioned functions to initialise, destroy, register and unregister components, this API has:
 
-- `ecs::ComponentManager::AddComponent`<br>
-	Is adding a component to an entity, like `ecs::ComponentManager::AddComponent<Render>(player);`
-- `ecs::ComponentManager::RemoveComponent`<br>
-	Is removing a component from an entity, like `ecs::ComponentManager::RemoveComponent<Render>(player);`
-- `ecs::ComponentManager::HasComponents`<br>
-	Return true if an entity as a component, lile `const bool hasRender = ecs::ComponentManager::HasComponents<Render>(player);`
-- `ecs::ComponentManager::GetComponent`<br>
-	Return the reference to the component associated to the entity, like: `Render& render = ecs::ComponentManager::GetComponent<Render>(player);`
-- `ecs::ComponentManager::IterateEntitiesWithAll`
+- `componentManager.AddComponent`<br>
+	Is adding a component to an entity, like `componentManager.AddComponent<Render>(player);`
+- `componentManager.RemoveComponent`<br>
+	Is removing a component from an entity, like `componentManager.RemoveComponent<Render>(player);`
+- `componentManager.HasComponents`<br>
+	Return true if an entity as a component, lile `const bool hasRender = componentManager.HasComponents<Render>(player);`
+- `componentManager.GetComponent`<br>
+	Return the reference to the component associated to the entity, like: `Render& render = componentManager.GetComponent<Render>(player);`
+- `componentManager.IterateEntitiesWithAll`
 	Iterate across all entities having **all/both** the component/s passed as template argument, and returning each entity, like:
 	```cpp
 	for (auto iterator : ecs::IterateEntitiesWithAll<Transform, RigidBody, Health>())
@@ -103,7 +110,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 		// do something with iterator, which is an Entity
 	}
 	```
-- `ecs::ComponentManager::IterateEntitiesWithAny`
+- `componentManager.IterateEntitiesWithAny`
 	Iterate across all entities having **any/either** of the component/s passed as template argument, and returning each entity, like:
 	```cpp
 	for (auto iterator : ecs::IterateEntitiesWithAny<Transform, RigidBody, Health, Render>())
@@ -111,7 +118,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 		// do something with iterator, which is an Entity
 	}
 	```
-- `ecs::ComponentManager::IterateEntitiesWithNot`
+- `componentManager.IterateEntitiesWithNot`
 	Iterate across all entities **not** having **all/both** of the component/s passed as template argument, and returning each entity, like:
 	```cpp
 	for (auto iterator : ecs::IterateEntitiesWithNot<Health>())
@@ -119,7 +126,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 		// do something with iterator, which is a Entity
 	}
 	```
-- `ecs::ComponentManager::CollectEntitiesWithAll`
+- `componentManager.CollectEntitiesWithAll`
 	Collect in a std::vector the entities having **all/both** the component/s passed as template argument, like
 	```cpp
 	std::vector<ecs::Entity> entitiesCollected;
@@ -131,7 +138,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 	}
 	entitiesCollected.clear();
 	```
-- `ecs::ComponentManager::CollectEntitiesWithAny`
+- `componentManager.CollectEntitiesWithAny`
 	Collect in a std::vector the entities having **any/either** the component/s passed as template argument, like
 	```cpp
 	std::vector<ecs::Entity> entitiesCollected;
@@ -143,7 +150,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 	}
 	entitiesCollected.clear();
 	```
-- `ecs::ComponentManager::CollectEntitiesWithNot`
+- `componentManager.CollectEntitiesWithNot`
 	Collect in a std::vector the entities **not** having **all/both** the component/s passed as template argument, like
 	```cpp
 	std::vector<ecs::Entity> entitiesCollected;

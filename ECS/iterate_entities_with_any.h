@@ -40,7 +40,7 @@ IterateEntitiesWithAny<T, Args...> IterateEntitiesWithAny<T, Args...>::begin()
     uint16 i = 0;
     while(end().m_entityIndex > i)
     {
-        if(!ComponentManager::HasAnyComponents<T, Args...>(i))
+        if(!ComponentManager::Instance().HasAnyComponents<T, Args...>(i))
         {
             ++i;
             continue;
@@ -53,7 +53,7 @@ IterateEntitiesWithAny<T, Args...> IterateEntitiesWithAny<T, Args...>::begin()
 template<typename T, typename... Args>
 IterateEntitiesWithAny<T, Args...> IterateEntitiesWithAny<T, Args...>::end()
 {
-    return IterateEntitiesWithAny<T, Args...>(EntityManager::m_totalEntityCreated);
+    return IterateEntitiesWithAny<T, Args...>(EntityManager::Instance().GetTotalEntityCreated());
 }
 
 template<typename T, typename... Args>
@@ -77,13 +77,13 @@ bool IterateEntitiesWithAny<T, Args...>::operator!= (const IterateEntitiesWithAn
 template<typename T, typename... Args>
 Entity IterateEntitiesWithAny<T, Args...>::operator*()
 {
-    return EntityManager::GetEntity(m_entityIndex);
+    return EntityManager::Instance().GetEntity(m_entityIndex);
 }
 
 template<typename T, typename... Args>
 Entity IterateEntitiesWithAny<T, Args...>::operator->()
 {
-    return EntityManager::GetEntity(m_entityIndex);
+    return EntityManager::Instance().GetEntity(m_entityIndex);
 }
 
 template<typename T, typename... Args>
@@ -92,7 +92,7 @@ IterateEntitiesWithAny<T, Args...> IterateEntitiesWithAny<T, Args...>::operator+
     ++m_entityIndex;
     while(end().m_entityIndex > m_entityIndex)
     {
-        if(ComponentManager::HasAnyComponents<T, Args...>(m_entityIndex))
+        if(ComponentManager::Instance().HasAnyComponents<T, Args...>(m_entityIndex))
         {
             return IterateEntitiesWithAny<T, Args...>(m_entityIndex);
         }

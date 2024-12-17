@@ -40,7 +40,7 @@ IterateEntitiesWithNot<T, Args...> IterateEntitiesWithNot<T, Args...>::begin()
     uint16 i = 0;
     while(end().m_entityIndex > i)
     {
-        if(!ComponentManager::HasNotComponents<T, Args...>(i))
+        if(!ComponentManager::Instance().HasNotComponents<T, Args...>(i))
         {
             ++i;
             continue;
@@ -53,7 +53,7 @@ IterateEntitiesWithNot<T, Args...> IterateEntitiesWithNot<T, Args...>::begin()
 template<typename T, typename... Args>
 IterateEntitiesWithNot<T, Args...> IterateEntitiesWithNot<T, Args...>::end()
 {
-    return IterateEntitiesWithNot<T, Args...>(EntityManager::m_totalEntityCreated);
+    return IterateEntitiesWithNot<T, Args...>(EntityManager::Instance().GetTotalEntityCreated());
 }
 
 template<typename T, typename... Args>
@@ -77,13 +77,13 @@ bool IterateEntitiesWithNot<T, Args...>::operator!= (const IterateEntitiesWithNo
 template<typename T, typename... Args>
 Entity IterateEntitiesWithNot<T, Args...>::operator*()
 {
-    return EntityManager::GetEntity(m_entityIndex);
+    return EntityManager::Instance().GetEntity(m_entityIndex);
 }
 
 template<typename T, typename... Args>
 Entity IterateEntitiesWithNot<T, Args...>::operator->()
 {
-    return EntityManager::GetEntity(m_entityIndex);
+    return EntityManager::Instance().GetEntity(m_entityIndex);
 }
 
 template<typename T, typename... Args>
@@ -92,7 +92,7 @@ IterateEntitiesWithNot<T, Args...> IterateEntitiesWithNot<T, Args...>::operator+
     ++m_entityIndex;
     while(end().m_entityIndex > m_entityIndex)
     {
-        if(ComponentManager::HasNotComponents<T, Args...>(m_entityIndex))
+        if(ComponentManager::Instance().HasNotComponents<T, Args...>(m_entityIndex))
         {
             return IterateEntitiesWithNot<T, Args...>(m_entityIndex);
         }

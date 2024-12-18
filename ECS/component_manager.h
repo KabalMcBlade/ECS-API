@@ -113,15 +113,6 @@ private:
 	std::unordered_map<uint32, std::shared_ptr<std::vector<uint64>>> m_componentIndices;
 	std::vector<uint32> m_componentHashId;
 	uint16 m_maxEntities = 0;
-
-	template<typename T, typename... Args>
-	friend class IterateEntitiesWithAll;
-
-	template<typename T, typename... Args>
-	friend class IterateEntitiesWithAny;
-
-	template<typename T, typename... Args>
-	friend class IterateEntitiesWithNot;
 };
 
 

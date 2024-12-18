@@ -314,7 +314,7 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	for (auto iterator : ecs::IterateEntitiesWithAll<Transform, RigidBody, Health>())
+	for (auto iterator : ecs::IterateEntitiesWithAll<Transform, RigidBody, Health>(componentManager))
 	{
 		std::cout << "iterator -> [Entity " << iterator.GetIndex() << ":" << iterator.GetVersion() << "]" << std::endl;
 	}
@@ -336,7 +336,7 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	for (auto iterator : ecs::IterateEntitiesWithAny<Transform, RigidBody, Health>())
+	for (auto iterator : ecs::IterateEntitiesWithAny<Transform, RigidBody, Health>(componentManager))
 	{
 		std::cout << "iterator -> [Entity " << iterator.GetIndex() << ":" << iterator.GetVersion() << "]" << std::endl;
 	}
@@ -354,7 +354,7 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	for (auto iterator : ecs::IterateEntitiesWithNot<Health, RigidBody>())
+	for (auto iterator : ecs::IterateEntitiesWithNot<Health, RigidBody>(componentManager))
 	{
 		std::cout << "iterator -> [Entity " << iterator.GetIndex() << ":" << iterator.GetVersion() << "]" << std::endl;
 	}

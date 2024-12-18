@@ -105,7 +105,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 - `componentManager.IterateEntitiesWithAll`
 	Iterate across all entities having **all/both** the component/s passed as template argument, and returning each entity, like:
 	```cpp
-	for (auto iterator : ecs::IterateEntitiesWithAll<Transform, RigidBody, Health>())
+	for (auto iterator : ecs::IterateEntitiesWithAll<Transform, RigidBody, Health>(componentManager))
 	{
 		// do something with iterator, which is an Entity
 	}
@@ -113,7 +113,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 - `componentManager.IterateEntitiesWithAny`
 	Iterate across all entities having **any/either** of the component/s passed as template argument, and returning each entity, like:
 	```cpp
-	for (auto iterator : ecs::IterateEntitiesWithAny<Transform, RigidBody, Health, Render>())
+	for (auto iterator : ecs::IterateEntitiesWithAny<Transform, RigidBody, Health, Render>(componentManager))
 	{
 		// do something with iterator, which is an Entity
 	}
@@ -121,7 +121,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 - `componentManager.IterateEntitiesWithNot`
 	Iterate across all entities **not** having **all/both** of the component/s passed as template argument, and returning each entity, like:
 	```cpp
-	for (auto iterator : ecs::IterateEntitiesWithNot<Health>())
+	for (auto iterator : ecs::IterateEntitiesWithNot<Health>(componentManager))
 	{
 		// do something with iterator, which is a Entity
 	}

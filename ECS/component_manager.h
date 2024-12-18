@@ -34,7 +34,7 @@ public:
 	void UnregisterComponent();
 
 	template <typename T>
-	bool IsComponentRegistered() const;
+	bool IsComponentRegistered();
 
 	template <typename T, typename... Args>
 	void AddComponent(const Entity _entity, const Args&... _args);
@@ -43,64 +43,64 @@ public:
 	void RemoveComponent(const Entity _entity);
 
 	template <typename T>
-	T GetComponent(const Entity _entity) const;
+	T& GetComponent(const Entity _entity);
 
 	// HAS ALL
 	template <typename T>
-	bool HasComponents(const Entity _entity) const;
+	bool HasComponents(const Entity _entity);
 
 	template <typename T1, typename T2, typename... Args>
-	bool HasComponents(const Entity _entity) const;
+	bool HasComponents(const Entity _entity);
 
 	template <typename T>
-	bool HasComponents(const EntityId _entityId) const;
+	bool HasComponents(const EntityId _entityId);
 
 	template <typename T1, typename T2, typename... Args>
-	bool HasComponents(const EntityId _entityId) const;
+	bool HasComponents(const EntityId _entityId);
 
 	template <typename T>
-	bool HasComponents(const uint16 _entityIndex) const;
+	bool HasComponents(const uint16 _entityIndex);
 
 	template <typename T1, typename T2, typename... Args>
-	bool HasComponents(const uint16 _entityIndex) const;
+	bool HasComponents(const uint16 _entityIndex);
 
 	// HAS ANY
 	template <typename T>
-	bool HasAnyComponents(const Entity _entity) const;
+	bool HasAnyComponents(const Entity _entity);
 
 	template <typename T1, typename T2, typename... Args>
-	bool HasAnyComponents(const Entity _entity) const;
+	bool HasAnyComponents(const Entity _entity);
 
 	template <typename T>
-	bool HasAnyComponents(const EntityId _entityId) const;
+	bool HasAnyComponents(const EntityId _entityId);
 
 	template <typename T1, typename T2, typename... Args>
-	bool HasAnyComponents(const EntityId _entityId) const;
+	bool HasAnyComponents(const EntityId _entityId);
 
 	template <typename T>
-	bool HasAnyComponents(const uint16 _entityIndex) const;
+	bool HasAnyComponents(const uint16 _entityIndex);
 
 	template <typename T1, typename T2, typename... Args>
-	bool HasAnyComponents(const uint16 _entityIndex) const;
+	bool HasAnyComponents(const uint16 _entityIndex);
 
 	// HAS NOT
 	template <typename T>
-	bool HasNotComponents(const Entity _entity) const;
+	bool HasNotComponents(const Entity _entity);
 
 	template <typename T1, typename T2, typename... Args>
-	bool HasNotComponents(const Entity _entity) const;
+	bool HasNotComponents(const Entity _entity);
 
 	template <typename T>
-	bool HasNotComponents(const EntityId _entityId) const;
+	bool HasNotComponents(const EntityId _entityId);
 
 	template <typename T1, typename T2, typename... Args>
-	bool HasNotComponents(const EntityId _entityId) const;
+	bool HasNotComponents(const EntityId _entityId);
 
 	template <typename T>
-	bool HasNotComponents(const uint16 _entityIndex) const;
+	bool HasNotComponents(const uint16 _entityIndex);
 
 	template <typename T1, typename T2, typename... Args>
-	bool HasNotComponents(const uint16 _entityIndex) const;
+	bool HasNotComponents(const uint16 _entityIndex);
 
 private:
 	ComponentManager() = default;
@@ -146,7 +146,7 @@ void ComponentManager::UnregisterComponent()
 }
     
 template <typename T>
-bool ComponentManager::IsComponentRegistered() const
+bool ComponentManager::IsComponentRegistered()
 {
 	const char* typeName = typeid(T).name();
 	const uint32 hash = Hash(typeName, std::strlen(typeName));
@@ -159,8 +159,8 @@ void ComponentManager::AddComponent(const Entity _entity, const Args&... _args)
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	const uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& components = *std::static_pointer_cast<std::vector<T>>(m_components.at(hash));
-	auto& indices = *m_componentIndices.at(hash);
+	auto& components = *std::static_pointer_cast<std::vector<T>>(m_components[hash]);
+	auto& indices = *m_componentIndices[hash];
 
 	assert(!HasComponents<T>(_entity) && "Component already present in the _entity.");
 	indices[_entity.m_id.m_index / 64u] |= (1ull << (_entity.m_id.m_index % 64u));
@@ -173,19 +173,19 @@ void ComponentManager::RemoveComponent(const Entity _entity)
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	const uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& indices = *m_componentIndices.at(hash);
+	auto& indices = *m_componentIndices[hash];
 	assert(HasComponents<T>(_entity) && "Tried to remove non-existing component.");
 
 	indices[_entity.m_id.m_index / 64u] &= ~(1ull << (_entity.m_id.m_index % 64u));
 }
 
 template<typename T>
-T ComponentManager::GetComponent(const Entity _entity) const
+T& ComponentManager::GetComponent(const Entity _entity)
 {
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	const uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& components = *std::static_pointer_cast<std::vector<T>>(m_components.at(hash));
+	auto& components = *std::static_pointer_cast<std::vector<T>>(m_components[hash]);
 	assert(HasComponents<T>(_entity) && "Tried to access non-existing component.");
 
 	return components[_entity.m_id.m_index];
@@ -194,147 +194,147 @@ T ComponentManager::GetComponent(const Entity _entity) const
 
 // HAS ALL
 template<typename T>
-bool ComponentManager::HasComponents(const Entity _entity) const
+bool ComponentManager::HasComponents(const Entity _entity)
 {
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& indices = *m_componentIndices.at(hash);
+	auto& indices = *m_componentIndices[hash];
 	return (indices[_entity.m_id.m_index / 64u] & (1ull << (_entity.m_id.m_index % 64u))) != 0u;
 }
 
 template<typename T1, typename T2, typename... Args>
-bool ComponentManager::HasComponents(const Entity _entity) const
+bool ComponentManager::HasComponents(const Entity _entity)
 {
 	return HasComponents<T1>(_entity) && HasComponents<T2, Args...>(_entity);
 }
 
 template<typename T>
-bool ComponentManager::HasComponents(const EntityId _entityId) const
+bool ComponentManager::HasComponents(const EntityId _entityId)
 {
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& indices = *m_componentIndices.at(hash);
+	auto& indices = *m_componentIndices[hash];
 	return (indices[_entityId.m_index / 64u] & (1ull << (_entityId.m_index % 64u))) != 0u;
 }
 
 template<typename T1, typename T2, typename... Args>
-bool ComponentManager::HasComponents(const EntityId _entityId) const
+bool ComponentManager::HasComponents(const EntityId _entityId)
 {
 	return HasComponents<T1>(_entityId) && HasComponents<T2, Args...>(_entityId);
 }
 
 template<typename T>
-bool ComponentManager::HasComponents(const uint16 entityIndex) const
+bool ComponentManager::HasComponents(const uint16 entityIndex)
 {
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& indices = *m_componentIndices.at(hash);
+	auto& indices = *m_componentIndices[hash];
 	return (indices[entityIndex / 64u] & (1ull << (entityIndex % 64u))) != 0u;
 }
 
 template<typename T1, typename T2, typename... Args>
-bool ComponentManager::HasComponents(const uint16 entityIndex) const
+bool ComponentManager::HasComponents(const uint16 entityIndex)
 {
 	return HasComponents<T1>(entityIndex) && HasComponents<T2, Args...>(entityIndex);
 }
 
 // HAS ANY
 template<typename T>
-bool ComponentManager::HasAnyComponents(const Entity _entity) const
+bool ComponentManager::HasAnyComponents(const Entity _entity)
 {
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& indices = *m_componentIndices.at(hash);
+	auto& indices = *m_componentIndices[hash];
 	return (indices[_entity.m_id.m_index / 64u] & (1ull << (_entity.m_id.m_index % 64u))) != 0u;
 }
 
 template<typename T1, typename T2, typename... Args>
-bool ComponentManager::HasAnyComponents(const Entity _entity) const
+bool ComponentManager::HasAnyComponents(const Entity _entity)
 {
 	return HasAnyComponents<T1>(_entity) || HasAnyComponents<T2, Args...>(_entity);
 }
 
 template<typename T>
-bool ComponentManager::HasAnyComponents(const EntityId _entityId) const
+bool ComponentManager::HasAnyComponents(const EntityId _entityId)
 {
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& indices = *m_componentIndices.at(hash);
+	auto& indices = *m_componentIndices[hash];
 	return (indices[_entityId.m_index / 64u] & (1ull << (_entityId.m_index % 64u))) != 0u;
 }
 
 template<typename T1, typename T2, typename... Args>
-bool ComponentManager::HasAnyComponents(const EntityId _entityId) const
+bool ComponentManager::HasAnyComponents(const EntityId _entityId)
 {
 	return HasAnyComponents<T1>(_entityId) || HasAnyComponents<T2, Args...>(_entityId);
 }
 
 template<typename T>
-bool ComponentManager::HasAnyComponents(const uint16 entityIndex) const
+bool ComponentManager::HasAnyComponents(const uint16 entityIndex)
 {
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& indices = *m_componentIndices.at(hash);
+	auto& indices = *m_componentIndices[hash];
 	return (indices[entityIndex / 64u] & (1ull << (entityIndex % 64u))) != 0u;
 }
 
 template<typename T1, typename T2, typename... Args>
-bool ComponentManager::HasAnyComponents(const uint16 entityIndex) const
+bool ComponentManager::HasAnyComponents(const uint16 entityIndex)
 {
 	return HasAnyComponents<T1>(entityIndex) || HasAnyComponents<T2, Args...>(entityIndex);
 }
 
 // HAS NOT
 template<typename T>
-bool ComponentManager::HasNotComponents(const Entity _entity) const
+bool ComponentManager::HasNotComponents(const Entity _entity)
 {
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& indices = *m_componentIndices.at(hash);
+	auto& indices = *m_componentIndices[hash];
 	return (indices[_entity.m_id.m_index / 64u] & (1ull << (_entity.m_id.m_index % 64u))) == 0u;
 }
 
 template<typename T1, typename T2, typename... Args>
-bool ComponentManager::HasNotComponents(const Entity _entity) const
+bool ComponentManager::HasNotComponents(const Entity _entity)
 {
 	return HasNotComponents<T1>(_entity) && HasNotComponents<T2, Args...>(_entity);
 }
 
 template<typename T>
-bool ComponentManager::HasNotComponents(const EntityId _entityId) const
+bool ComponentManager::HasNotComponents(const EntityId _entityId)
 {
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& indices = *m_componentIndices.at(hash);
+	auto& indices = *m_componentIndices[hash];
 	return (indices[_entityId.m_index / 64u] & (1ull << (_entityId.m_index % 64u))) == 0u;
 }
 
 template<typename T1, typename T2, typename... Args>
-bool ComponentManager::HasNotComponents(const EntityId _entityId) const
+bool ComponentManager::HasNotComponents(const EntityId _entityId)
 {
 	return HasNotComponents<T1>(_entityId) && HasNotComponents<T2, Args...>(_entityId);
 }
 
 template<typename T>
-bool ComponentManager::HasNotComponents(const uint16 entityIndex) const
+bool ComponentManager::HasNotComponents(const uint16 entityIndex)
 {
 	assert(IsComponentRegistered<T>() && "Component has not been registered!");
 	uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
 
-	auto& indices = *m_componentIndices.at(hash);
+	auto& indices = *m_componentIndices[hash];
 	return (indices[entityIndex / 64u] & (1ull << (entityIndex % 64u))) == 0u;
 }
 
 template<typename T1, typename T2, typename... Args>
-bool ComponentManager::HasNotComponents(const uint16 entityIndex) const
+bool ComponentManager::HasNotComponents(const uint16 entityIndex)
 {
 	return HasNotComponents<T1>(entityIndex) && HasNotComponents<T2, Args...>(entityIndex);
 }

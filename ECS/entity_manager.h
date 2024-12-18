@@ -26,12 +26,12 @@ public:
 
 	Entity CreateEntity();
 	void DestroyEntity(const Entity _entity);
-	bool ExistEntity(const uint16 _entityIndex);
-	Entity GetEntity(const uint16 _entityIndex);
+	bool ExistEntity(const uint16 _entityIndex) const;
+	Entity GetEntity(const uint16 _entityIndex) const;
 
 	ECS_FORCE_INLINE uint16 GetTotalEntityCreated() const { return m_totalEntityCreated; }
 
-	ECS_FORCE_INLINE const std::vector<uint64>& GetEntities() { return m_entities; }
+	ECS_FORCE_INLINE const std::vector<uint64>& GetEntities() const { return m_entities; }
 
 private:
 	EntityManager() = default;

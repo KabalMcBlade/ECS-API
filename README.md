@@ -43,10 +43,11 @@ Anyway is up to you, is still very self contained library!
 
 There are some steps to do at the beginning and some step to perform at the finalization. These are:
 
-1. Get the singletons, which are responsable for everything, much better than keep calling the getter!
+1. Get the singletons, which are responsable for everything, much better than keep calling the getter! And get the entity collector, if used!
 	```cpp
 	ecs::ComponentManager& componentManager = ecs::GetComponentManager();
 	ecs::EntityManager& entityManager = ecs::GetEntityManager();
+	ecs::EntityCollector collector(componentManager, entityManager);
 	```
 
 2. Create the Entity Manager and the Component Manager, passing a max entity count and a max component per entity count. These 2 values are the limits of the entities and the limits of component per entity
@@ -102,7 +103,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 	Return true if an entity as a component, lile `const bool hasRender = componentManager.HasComponents<Render>(player);`
 - `componentManager.GetComponent`<br>
 	Return the reference to the component associated to the entity, like: `Render& render = componentManager.GetComponent<Render>(player);`
-- `componentManager.IterateEntitiesWithAll`
+- `IterateEntitiesWithAll`
 	Iterate across all entities having **all/both** the component/s passed as template argument, and returning each entity, like:
 	```cpp
 	for (auto iterator : ecs::IterateEntitiesWithAll<Transform, RigidBody, Health>(componentManager))
@@ -110,7 +111,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 		// do something with iterator, which is an Entity
 	}
 	```
-- `componentManager.IterateEntitiesWithAny`
+- `IterateEntitiesWithAny`
 	Iterate across all entities having **any/either** of the component/s passed as template argument, and returning each entity, like:
 	```cpp
 	for (auto iterator : ecs::IterateEntitiesWithAny<Transform, RigidBody, Health, Render>(componentManager))
@@ -118,7 +119,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 		// do something with iterator, which is an Entity
 	}
 	```
-- `componentManager.IterateEntitiesWithNot`
+- `IterateEntitiesWithNot`
 	Iterate across all entities **not** having **all/both** of the component/s passed as template argument, and returning each entity, like:
 	```cpp
 	for (auto iterator : ecs::IterateEntitiesWithNot<Health>(componentManager))
@@ -126,36 +127,36 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 		// do something with iterator, which is a Entity
 	}
 	```
-- `componentManager.CollectEntitiesWithAll`
+- `CollectEntitiesWithAll`
 	Collect in a std::vector the entities having **all/both** the component/s passed as template argument, like
 	```cpp
 	std::vector<ecs::Entity> entitiesCollected;
 	...
-	ecs::EntityCollector::CollectEntitiesWithAll<Transform, RigidBody, Health>(entitiesCollected);
+	collector.CollectEntitiesWithAll<Transform, RigidBody, Health>(entitiesCollected);
 	for (const ecs::Entity entityCollected : entitiesCollected)
 	{
 		// do something with entityCollected, the entity collect
 	}
 	entitiesCollected.clear();
 	```
-- `componentManager.CollectEntitiesWithAny`
+- `CollectEntitiesWithAny`
 	Collect in a std::vector the entities having **any/either** the component/s passed as template argument, like
 	```cpp
 	std::vector<ecs::Entity> entitiesCollected;
 	...
-	ecs::EntityCollector::CollectEntitiesWithAny<Transform, RigidBody, Health, Render>(entitiesCollected);
+	collector.CollectEntitiesWithAny<Transform, RigidBody, Health, Render>(entitiesCollected);
 	for (const ecs::Entity entityCollected : entitiesCollected)
 	{
 		// do something with entityCollected, the entity collect
 	}
 	entitiesCollected.clear();
 	```
-- `componentManager.CollectEntitiesWithNot`
+- `CollectEntitiesWithNot`
 	Collect in a std::vector the entities **not** having **all/both** the component/s passed as template argument, like
 	```cpp
 	std::vector<ecs::Entity> entitiesCollected;
 	...
-	ecs::EntityCollector::CollectEntitiesWithNot<Health>(entitiesCollected);
+	collector.CollectEntitiesWithNot<Health>(entitiesCollected);
 	for (const ecs::Entity entityCollected : entitiesCollected)
 	{
 		// do something with entityCollected, the entity collect

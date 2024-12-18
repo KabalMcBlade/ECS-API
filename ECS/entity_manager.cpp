@@ -57,12 +57,12 @@ void EntityManager::DestroyEntity(const Entity _entity)
 	m_entities[index / 64u] &= ~(1ull << (index % 64u));
 }
 
-bool EntityManager::ExistEntity(const uint16 _entityIndex)
+bool EntityManager::ExistEntity(const uint16 _entityIndex) const
 {
 	return (m_entities[_entityIndex / 64u] & (1ull << (_entityIndex % 64u))) != 0u;
 }
 
-Entity EntityManager::GetEntity(const uint16 _entityIndex)
+Entity EntityManager::GetEntity(const uint16 _entityIndex) const
 {
 	assert(_entityIndex >= 0 && _entityIndex < kMaxEntities && "Entity index out of range!");
 	assert(ExistEntity(_entityIndex) && "Entity index does not exist!");

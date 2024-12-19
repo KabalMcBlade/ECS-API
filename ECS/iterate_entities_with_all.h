@@ -2,6 +2,7 @@
 
 #include "types.h"
 #include "entity.h"
+#include "entity_manager.h"
 #include "component_manager.h"
 
 #include <cassert>
@@ -14,10 +15,10 @@ template<typename T, typename... Args>
 class IterateEntitiesWithAll
 {
 public:
-    explicit IterateEntitiesWithAll(ComponentManager& _manager) : m_manager(_manager), m_entityIndex(0) {}
-    explicit IterateEntitiesWithAll(ComponentManager& _manager, Entity _entity) : m_manager(_manager), m_entityIndex(_entity.m_id.m_index) {}
-    explicit IterateEntitiesWithAll(ComponentManager& _manager, EntityId _entityId) : m_manager(_manager), m_entityIndex(_entityId.m_index) {}
-    explicit IterateEntitiesWithAll(ComponentManager& _manager, uint16 _entityIndex) : m_manager(_manager), m_entityIndex(_entityIndex) {}
+    explicit IterateEntitiesWithAll(EntityManager& _entityManager, ComponentManager& _componentManager) : m_entityManager(_entityManager), m_componentManager(_componentManager), m_entityIndex(0) {}
+    explicit IterateEntitiesWithAll(EntityManager& _entityManager, ComponentManager& _componentManager, Entity _entity) : m_entityManager(_entityManager), m_componentManager(_componentManager), m_entityIndex(_entity.m_id.m_index) {}
+    explicit IterateEntitiesWithAll(EntityManager& _entityManager, ComponentManager& _componentManager, EntityId _entityId) : m_entityManager(_entityManager), m_componentManager(_componentManager), m_entityIndex(_entityId.m_index) {}
+    explicit IterateEntitiesWithAll(EntityManager& _entityManager, ComponentManager& _componentManager, uint16 _entityIndex) : m_entityManager(_entityManager), m_componentManager(_componentManager), m_entityIndex(_entityIndex) {}
     
     IterateEntitiesWithAll<T, Args...> begin();
     IterateEntitiesWithAll<T, Args...> end();
@@ -31,7 +32,8 @@ public:
     IterateEntitiesWithAll<T, Args...> operator++();
 
 private:
-	ComponentManager& m_manager;
+    EntityManager& m_entityManager;
+	ComponentManager& m_componentManager;
     uint16 m_entityIndex;
 };
 
@@ -42,12 +44,12 @@ IterateEntitiesWithAll<T, Args...> IterateEntitiesWithAll<T, Args...>::begin()
     uint16 i = 0;
     while(end().m_entityIndex > i)
     {
-        if(!m_manager.HasComponents<T, Args...>(i))
+        if(!m_componentManager.HasComponents<T, Args...>(i))
         {
             ++i;
             continue;
         }
-        return IterateEntitiesWithAll<T, Args...>(m_manager, i);
+        return IterateEntitiesWithAll<T, Args...>(m_entityManager, m_componentManager, i);
     }
     return end();
 }
@@ -55,7 +57,7 @@ IterateEntitiesWithAll<T, Args...> IterateEntitiesWithAll<T, Args...>::begin()
 template<typename T, typename... Args>
 IterateEntitiesWithAll<T, Args...> IterateEntitiesWithAll<T, Args...>::end()
 {
-    return IterateEntitiesWithAll<T, Args...>(m_manager, EntityManager::Instance().GetTotalEntityCreated());
+    return IterateEntitiesWithAll<T, Args...>(m_entityManager, m_componentManager, m_entityManager.GetTotalEntityCreated());
 }
 
 template<typename T, typename... Args>
@@ -79,13 +81,13 @@ bool IterateEntitiesWithAll<T, Args...>::operator!= (const IterateEntitiesWithAl
 template<typename T, typename... Args>
 Entity IterateEntitiesWithAll<T, Args...>::operator*()
 {
-    return EntityManager::Instance().GetEntity(m_entityIndex);
+    return m_entityManager.GetEntity(m_entityIndex);
 }
 
 template<typename T, typename... Args>
 Entity IterateEntitiesWithAll<T, Args...>::operator->()
 {
-    return EntityManager::Instance().GetEntity(m_entityIndex);
+    return m_entityManager.GetEntity(m_entityIndex);
 }
 
 template<typename T, typename... Args>
@@ -94,9 +96,9 @@ IterateEntitiesWithAll<T, Args...> IterateEntitiesWithAll<T, Args...>::operator+
     ++m_entityIndex;
     while(end().m_entityIndex > m_entityIndex)
     {
-        if(m_manager.HasComponents<T, Args...>(m_entityIndex))
+        if(m_componentManager.HasComponents<T, Args...>(m_entityIndex))
         {
-            return IterateEntitiesWithAll<T, Args...>(m_manager, m_entityIndex);
+            return IterateEntitiesWithAll<T, Args...>(m_entityManager, m_componentManager, m_entityIndex);
         }
         ++m_entityIndex;
     }

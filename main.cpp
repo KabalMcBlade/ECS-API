@@ -314,7 +314,7 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	for (auto iterator : ecs::IterateEntitiesWithAll<Transform, RigidBody, Health>(componentManager))
+	for (auto iterator : ecs::IterateEntitiesWithAll<Transform, RigidBody, Health>(entityManager, componentManager))
 	{
 		std::cout << "iterator -> [Entity " << iterator.GetIndex() << ":" << iterator.GetVersion() << "]" << std::endl;
 	}
@@ -336,7 +336,7 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	for (auto iterator : ecs::IterateEntitiesWithAny<Transform, RigidBody, Health>(componentManager))
+	for (auto iterator : ecs::IterateEntitiesWithAny<Transform, RigidBody, Health>(entityManager, componentManager))
 	{
 		std::cout << "iterator -> [Entity " << iterator.GetIndex() << ":" << iterator.GetVersion() << "]" << std::endl;
 	}
@@ -354,7 +354,7 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	for (auto iterator : ecs::IterateEntitiesWithNot<Health, RigidBody>(componentManager))
+	for (auto iterator : ecs::IterateEntitiesWithNot<Health, RigidBody>(entityManager, componentManager))
 	{
 		std::cout << "iterator -> [Entity " << iterator.GetIndex() << ":" << iterator.GetVersion() << "]" << std::endl;
 	}
@@ -374,7 +374,7 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	ecs::EntityCollector::CollectEntitiesWithAll<Transform, RigidBody, Health>(entitiesCollected);
+	ecs::EntityCollector::CollectEntitiesWithAll<Transform, RigidBody, Health>(entityManager, componentManager, entitiesCollected);
 	for (const ecs::Entity entityCollected : entitiesCollected)
 	{
 		std::cout << "entityCollected -> [Entity " << entityCollected.GetIndex() << ":" << entityCollected.GetVersion() << "]" << std::endl;
@@ -398,7 +398,7 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	ecs::EntityCollector::CollectEntitiesWithAny<Transform, RigidBody, Health>(entitiesCollected);
+	ecs::EntityCollector::CollectEntitiesWithAny<Transform, RigidBody, Health>(entityManager, componentManager, entitiesCollected);
 	for (const ecs::Entity entityCollected : entitiesCollected)
 	{
 		std::cout << "entityCollected -> [Entity " << entityCollected.GetIndex() << ":" << entityCollected.GetVersion() << "]" << std::endl;
@@ -418,7 +418,7 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	ecs::EntityCollector::CollectEntitiesWithNot<Health, RigidBody>(entitiesCollected);
+	ecs::EntityCollector::CollectEntitiesWithNot<Health, RigidBody>(entityManager, componentManager, entitiesCollected);
 	for (const ecs::Entity entityCollected : entitiesCollected)
 	{
 		std::cout << "entityCollected -> [Entity " << entityCollected.GetIndex() << ":" << entityCollected.GetVersion() << "]" << std::endl;

@@ -2,6 +2,8 @@
 
 #include "types.h"
 #include "entity.h"
+#include "entity_manager.h"
+#include "component_manager.h"
 
 #include <cassert>
 #include <vector>
@@ -20,20 +22,20 @@ public:
 	EntityCollector& operator=(EntityCollector&& _other) = delete;
 	
     template<typename T, typename... Args>
-    static void CollectEntitiesWithAll(std::vector<Entity>& _outEntities);
+    static void CollectEntitiesWithAll(const EntityManager& _entityManager, const ComponentManager& _componentManager, std::vector<Entity>& _outEntities);
     
     template<typename T, typename... Args>
-    static void CollectEntitiesWithAny(std::vector<Entity>& _outEntities);
+    static void CollectEntitiesWithAny(const EntityManager& _entityManager, const ComponentManager& _componentManager, std::vector<Entity>& _outEntities);
     
     template<typename T, typename... Args>
-    static void CollectEntitiesWithNot(std::vector<Entity>& _outEntities);
+    static void CollectEntitiesWithNot(const EntityManager& _entityManager, const ComponentManager& _componentManager, std::vector<Entity>& _outEntities);
 };
 
 template<typename T, typename... Args>
-void EntityCollector::CollectEntitiesWithAll(std::vector<Entity>& _outEntities)
+void EntityCollector::CollectEntitiesWithAll(const EntityManager& _entityManager, const ComponentManager& _componentManager, std::vector<Entity>& _outEntities)
 {
     uint16 index = 0;
-	for (uint64 block : GetEntityManager().GetEntities())
+	for (uint64 block : _entityManager.GetEntities())
 	{
 		while (block != 0)
 		{
@@ -42,11 +44,11 @@ void EntityCollector::CollectEntitiesWithAll(std::vector<Entity>& _outEntities)
 			
 			const uint16 currentId = bitIndex + index;
 			
-		    const bool has = GetComponentManager().HasComponents<T, Args...>(currentId);
+		    const bool has = _componentManager.HasComponents<T, Args...>(currentId);
 		    
 		    if (has)
 			{
-		        _outEntities.push_back(GetEntityManager().GetEntity(currentId));
+		        _outEntities.push_back(_entityManager.GetEntity(currentId));
 			}
 		}
 		index += 64u;
@@ -54,10 +56,10 @@ void EntityCollector::CollectEntitiesWithAll(std::vector<Entity>& _outEntities)
 }
 
 template<typename T, typename... Args>
-void EntityCollector::CollectEntitiesWithAny(std::vector<Entity>& _outEntities)
+void EntityCollector::CollectEntitiesWithAny(const EntityManager& _entityManager, const ComponentManager& _componentManager, std::vector<Entity>& _outEntities)
 {
     uint16 index = 0;
-	for (uint64 block : GetEntityManager().GetEntities())
+	for (uint64 block : _entityManager.GetEntities())
 	{
 		while (block != 0)
 		{
@@ -66,11 +68,11 @@ void EntityCollector::CollectEntitiesWithAny(std::vector<Entity>& _outEntities)
 			
 			const uint16 currentId = bitIndex + index;
 			
-		    const bool hasAny = GetComponentManager().HasAnyComponents<T, Args...>(currentId);
+		    const bool hasAny = _componentManager.HasAnyComponents<T, Args...>(currentId);
 		    
 		    if (hasAny)
 			{
-		        _outEntities.push_back(GetEntityManager().GetEntity(currentId));
+		        _outEntities.push_back(_entityManager.GetEntity(currentId));
 			}
 		}
 		index += 64u;
@@ -78,10 +80,10 @@ void EntityCollector::CollectEntitiesWithAny(std::vector<Entity>& _outEntities)
 }
 
 template<typename T, typename... Args>
-void EntityCollector::CollectEntitiesWithNot(std::vector<Entity>& _outEntities)
+void EntityCollector::CollectEntitiesWithNot(const EntityManager& _entityManager, const ComponentManager& _componentManager, std::vector<Entity>& _outEntities)
 {
     uint16 index = 0;
-	for (uint64 block : GetEntityManager().GetEntities())
+	for (uint64 block : _entityManager.GetEntities())
 	{
 		while (block != 0)
 		{
@@ -90,11 +92,11 @@ void EntityCollector::CollectEntitiesWithNot(std::vector<Entity>& _outEntities)
 			
 			const uint16 currentId = bitIndex + index;
 			
-		    const bool hasNot = GetComponentManager().HasNotComponents<T, Args...>(currentId);
+		    const bool hasNot = _componentManager.HasNotComponents<T, Args...>(currentId);
 		    
 		    if (hasNot)
 			{
-		        _outEntities.push_back(GetEntityManager().GetEntity(currentId));
+		        _outEntities.push_back(_entityManager.GetEntity(currentId));
 			}
 		}
 		index += 64u;

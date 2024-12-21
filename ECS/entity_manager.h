@@ -17,7 +17,7 @@ ECS_NAMESPACE_BEGIN
 class ECS_DLL EntityManager
 {
 public:
-	static EntityManager& Instance()
+	inline static EntityManager& Instance()
 	{
 		static EntityManager instance;
 		return instance;

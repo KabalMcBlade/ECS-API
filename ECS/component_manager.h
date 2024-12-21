@@ -20,7 +20,7 @@ ECS_NAMESPACE_BEGIN
 class ECS_DLL ComponentManager
 {
 public:
-	static ComponentManager& Instance()
+	inline static ComponentManager& Instance()
 	{
 		static ComponentManager instance;
 		return instance;

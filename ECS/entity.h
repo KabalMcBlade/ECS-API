@@ -10,7 +10,7 @@ ECS_NAMESPACE_BEGIN
 
 static constexpr uint32 kMaxEntities = kMaxEntityIndex;
 
-class Entity
+class ECS_DLL Entity
 {
 public:
     Entity() = delete;

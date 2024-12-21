@@ -68,7 +68,7 @@ typedef intptr ptrdiff;
 
 static constexpr uint32 kMaxEntityIndex = 16777215u;
 
-struct _EntityID
+struct ECS_DLL _EntityID
 {
     uint32 m_index : 24;
     uint8 m_version : 8;

@@ -9,10 +9,12 @@
 #include <algorithm>
 #include <limits>
 
+// for now, for the warning of exporting std classes
+#pragma warning(disable : 4251)
 
 ECS_NAMESPACE_BEGIN
 
-class EntityManager
+class ECS_DLL EntityManager
 {
 public:
 	static EntityManager& Instance()

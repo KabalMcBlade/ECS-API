@@ -12,10 +12,12 @@
 #include <unordered_map>
 #include <typeinfo>
 
+// for now, for the warning of exporting std classes
+#pragma warning(disable : 4251)
 
 ECS_NAMESPACE_BEGIN
 
-class ComponentManager
+class ECS_DLL ComponentManager
 {
 public:
 	static ComponentManager& Instance()

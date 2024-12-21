@@ -18,7 +18,7 @@ void ComponentManager::Destroy()
 }
 
 
-ECS_DLL ComponentManager& GetComponentManager()
+ECS_API ComponentManager& GetComponentManager()
 {
 	return ComponentManager::Instance();
 }

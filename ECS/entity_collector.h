@@ -10,7 +10,7 @@
 
 ECS_NAMESPACE_BEGIN
 
-class ECS_DLL EntityCollector
+class ECS_API EntityCollector
 {
 public:
     EntityCollector() = delete;

@@ -14,7 +14,7 @@
 
 ECS_NAMESPACE_BEGIN
 
-class ECS_DLL EntityManager
+class ECS_API EntityManager
 {
 public:
 	inline static EntityManager& Instance()
@@ -47,6 +47,6 @@ private:
 	uint16 m_totalEntityCreated = 0;
 };
 
-ECS_DLL EntityManager& GetEntityManager();
+ECS_API EntityManager& GetEntityManager();
 
 ECS_NAMESPACE_END

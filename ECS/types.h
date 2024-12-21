@@ -16,13 +16,15 @@
 #define ECS_FORCE_INLINE __attribute__((always_inline)) inline
 #endif
 
-#ifdef ECS_EXPORTS
-#define ECS_DLL __declspec(dllexport)
-#define ECS_TEMPLATE
-#else
-#define ECS_DLL __declspec(dllimport)
-#define ECS_TEMPLATE extern
-#endif 
+
+#if defined(ECS_DLL_EXPORT)             // When exporting from the DLL
+#define ECS_API __declspec(dllexport)
+#elif defined(ECS_DLL_IMPORT)           // When importing to the DLL
+#define ECS_API __declspec(dllimport)
+#else                                   // When using the static library
+#define ECS_API
+#endif
+
 
 ECS_NAMESPACE_BEGIN
 
@@ -68,7 +70,7 @@ typedef intptr ptrdiff;
 
 static constexpr uint32 kMaxEntityIndex = 16777215u;
 
-struct ECS_DLL _EntityID
+struct ECS_API _EntityID
 {
     uint32 m_index : 24;
     uint8 m_version : 8;

@@ -17,7 +17,7 @@
 
 ECS_NAMESPACE_BEGIN
 
-class ECS_DLL ComponentManager
+class ECS_API ComponentManager
 {
 public:
 	inline static ComponentManager& Instance()
@@ -118,7 +118,7 @@ private:
 };
 
 
-ECS_DLL ComponentManager& GetComponentManager();
+ECS_API ComponentManager& GetComponentManager();
 
 
 template<typename T>

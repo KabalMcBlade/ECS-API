@@ -71,7 +71,7 @@ Entity EntityManager::GetEntity(const uint16 _entityIndex) const
 }
 
 
-ECS_DLL EntityManager& GetEntityManager()
+ECS_API EntityManager& GetEntityManager()
 {
 	return EntityManager::Instance();
 }

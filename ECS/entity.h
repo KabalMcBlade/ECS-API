@@ -54,4 +54,6 @@ public:
     friend class IterateEntitiesWithNot;
 };
 
+static const ecs::Entity UnknowEntity = ecs::Entity(0, 0);
+
 ECS_NAMESPACE_END

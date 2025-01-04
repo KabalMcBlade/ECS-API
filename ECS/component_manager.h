@@ -47,6 +47,12 @@ public:
 	template <typename T>
 	T& GetComponent(const Entity _entity);
 
+	template <typename T>
+	T& GetComponent(const EntityId _entityId);
+
+	template <typename T>
+	T& GetComponent(const uint16 _entityIndex);
+
 	// HAS ALL
 	template <typename T>
 	bool HasComponents(const Entity _entity) const;
@@ -193,6 +199,29 @@ T& ComponentManager::GetComponent(const Entity _entity)
 	return components[_entity.m_id.m_index];
 }
 
+template <typename T>
+T& ComponentManager::GetComponent(const EntityId _entityId)
+{
+	assert(IsComponentRegistered<T>() && "Component has not been registered!");
+	const uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
+
+	auto& components = *std::static_pointer_cast<std::vector<T>>(m_components[hash]);
+	assert(HasComponents<T>(_entityId) && "Tried to access non-existing component.");
+
+	return components[_entityId.m_index];
+}
+
+template <typename T>
+T& ComponentManager::GetComponent(const uint16 _entityIndex)
+{
+	assert(IsComponentRegistered<T>() && "Component has not been registered!");
+	const uint32 hash = Hash(typeid(T).name(), std::strlen(typeid(T).name()));
+
+	auto& components = *std::static_pointer_cast<std::vector<T>>(m_components[hash]);
+	assert(HasComponents<T>(_entityIndex) && "Tried to access non-existing component.");
+
+	return components[_entityIndex];
+}
 
 // HAS ALL
 template<typename T>

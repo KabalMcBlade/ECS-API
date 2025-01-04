@@ -103,14 +103,6 @@ namespace
 
 int main()
 {
-	// test purpose only:
-	std::random_device rd;
-	std::mt19937 mt(rd());
-	std::uniform_real_distribution<float> dist(0.1f, 1.0f);
-
-	std::vector<ecs::Entity> entitiesCollected;
-
-
 	//////////////////////////////////////////////////////////////////////////
 	// 1. Get the managers
 	ecs::ComponentManager& componentManager = ecs::GetComponentManager();
@@ -169,10 +161,10 @@ int main()
 	componentManager.AddComponent<RigidBody>(npc2);
 
 	// Health to:
-	componentManager.AddComponent<Health>(player, Health{1.0f, dist(mt) });
-	componentManager.AddComponent<Health>(npc0, Health{ 1.0f, dist(mt) });
-	componentManager.AddComponent<Health>(npc1, Health{ 1.0f, dist(mt) });
-	componentManager.AddComponent<Health>(npc2, Health{ 1.0f, dist(mt) });
+	componentManager.AddComponent<Health>(player, Health{1.0f, 1.0f });
+	componentManager.AddComponent<Health>(npc0, Health{ 1.0f, 0.5f });
+	componentManager.AddComponent<Health>(npc1, Health{ 1.0f, 0.5f });
+	componentManager.AddComponent<Health>(npc2, Health{ 1.0f, 0.75 });
 
 	// Camera to (notice has no data for test purpose):
 	componentManager.AddComponent<Camera>(camera);
@@ -374,12 +366,12 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	ecs::EntityCollector::CollectEntitiesWithAll<Transform, RigidBody, Health>(entityManager, componentManager, entitiesCollected);
-	for (const ecs::Entity entityCollected : entitiesCollected)
+	std::vector<ecs::Entity> entitiesCollectedWithAll = ecs::EntityCollector::CollectEntitiesWithAll<Transform, RigidBody, Health>(entityManager, componentManager);
+	for (const ecs::Entity entityCollected : entitiesCollectedWithAll)
 	{
 		std::cout << "entityCollected -> [Entity " << entityCollected.GetIndex() << ":" << entityCollected.GetVersion() << "]" << std::endl;
 	}
-	entitiesCollected.clear();
+	entitiesCollectedWithAll.clear();
 
 	std::cout << std::endl << std::endl;
 #endif
@@ -398,12 +390,12 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	ecs::EntityCollector::CollectEntitiesWithAny<Transform, RigidBody, Health>(entityManager, componentManager, entitiesCollected);
-	for (const ecs::Entity entityCollected : entitiesCollected)
+	std::vector<ecs::Entity> entitiesCollectedWithAny = ecs::EntityCollector::CollectEntitiesWithAny<Transform, RigidBody, Health>(entityManager, componentManager);
+	for (const ecs::Entity entityCollected : entitiesCollectedWithAny)
 	{
 		std::cout << "entityCollected -> [Entity " << entityCollected.GetIndex() << ":" << entityCollected.GetVersion() << "]" << std::endl;
 	}
-	entitiesCollected.clear();
+	entitiesCollectedWithAny.clear();
 
 	std::cout << std::endl << std::endl;
 #endif
@@ -418,23 +410,97 @@ int main()
 
 	std::cout << "Checking..." << std::endl;
 
-	ecs::EntityCollector::CollectEntitiesWithNot<Health, RigidBody>(entityManager, componentManager, entitiesCollected);
-	for (const ecs::Entity entityCollected : entitiesCollected)
+	std::vector<ecs::Entity> entitiesCollectedWithNot = ecs::EntityCollector::CollectEntitiesWithNot<Health, RigidBody>(entityManager, componentManager);
+	for (const ecs::Entity entityCollected : entitiesCollectedWithNot)
 	{
 		std::cout << "entityCollected -> [Entity " << entityCollected.GetIndex() << ":" << entityCollected.GetVersion() << "]" << std::endl;
 	}
-	entitiesCollected.clear();
+	entitiesCollectedWithNot.clear();
 
 	std::cout << std::endl << std::endl;
 #endif
 
 
 	//////////////////////////////////////////////////////////////////////////
-	// TEST 10: Destroy an entity and create it again, see the version updated
+	// TEST 10: Collecting every entities having BOTH Render and Health AND group them by Health value
+
+#ifdef _DEBUG
+	std::cout << "TEST 10: Collecting every entities having BOTH Render and Health AND group them by Health value, which should be: " << std::endl;
+
+	std::cout << "Group Health::m_currentValue = 0.75: " << std::endl;
+	std::cout << "npc2 = [Entity " << npc2.GetIndex() << ":" << npc2.GetVersion() << "]" << std::endl;
+	std::cout << "Group Health::m_currentValue = 0.5: " << std::endl;
+	std::cout << "npc0 = [Entity " << npc0.GetIndex() << ":" << npc0.GetVersion() << "]" << std::endl;
+	std::cout << "npc1 = [Entity " << npc1.GetIndex() << ":" << npc1.GetVersion() << "]" << std::endl;
+	std::cout << "Group Health::m_currentValue = 1: " << std::endl;
+	std::cout << "player = [Entity " << player.GetIndex() << ":" << player.GetVersion() << "]" << std::endl;
+
+	std::cout << "Checking..." << std::endl;
+
+	auto  entitiesCollectedAndGroupEntitiesWithAllByField =
+		ecs::EntityCollector::CollectAndGroupEntitiesWithAllByField<Health, Render>(entityManager, componentManager, &Health::m_currentValue);
+
+	for (const auto& [key, entities] : entitiesCollectedAndGroupEntitiesWithAllByField)
+	{
+		std::cout << "Group Health::m_currentValue = " << key << ": " << std::endl;
+		for (const auto& entityCollected : entities)
+		{
+			std::cout << "entityCollected -> [Entity " << entityCollected.GetIndex() << ":" << entityCollected.GetVersion() << "]" << std::endl;
+		}
+	}
+
+	entitiesCollectedAndGroupEntitiesWithAllByField.clear();
+
+	std::cout << std::endl << std::endl;
+#endif
+
+	//////////////////////////////////////////////////////////////////////////
+	// TEST 11: Collecting every entities having EITHER Render and Health AND group them by Health value
+
+#ifdef _DEBUG
+	std::cout << "TEST 11: Collecting every entities having EITHER Transform, Render and Health AND group them by Health value, which should be: " << std::endl;
+
+	std::cout << "Group Health::m_currentValue = 0.75: " << std::endl;
+	std::cout << "npc2 = [Entity " << npc2.GetIndex() << ":" << npc2.GetVersion() << "]" << std::endl;
+	std::cout << "Group Health::m_currentValue = 0.5: " << std::endl;
+	std::cout << "npc0 = [Entity " << npc0.GetIndex() << ":" << npc0.GetVersion() << "]" << std::endl;
+	std::cout << "npc1 = [Entity " << npc1.GetIndex() << ":" << npc1.GetVersion() << "]" << std::endl;
+	std::cout << "Group Health::m_currentValue = 1: " << std::endl;
+	std::cout << "player = [Entity " << player.GetIndex() << ":" << player.GetVersion() << "]" << std::endl;
+	std::cout << "[NO GROUP]: " << std::endl;
+	std::cout << "camera = [Entity " << camera.GetIndex() << ":" << camera.GetVersion() << "]" << std::endl;
+	std::cout << "Checking..." << std::endl;
+
+	std::vector<ecs::Entity> entitiesWithoutGroupByAny;
+	auto  entitiesCollectedAndGroupEntitiesWithAnyByField =
+		ecs::EntityCollector::CollectAndGroupEntitiesWithAnyByField<Health, Transform, Render>(entityManager, componentManager, &Health::m_currentValue, entitiesWithoutGroupByAny);
+
+	for (const auto& [key, entities] : entitiesCollectedAndGroupEntitiesWithAnyByField)
+	{
+		std::cout << "Group Health::m_currentValue = " << key << ": " << std::endl;
+		for (const auto& entityCollected : entities)
+		{
+			std::cout << "entityCollected -> [Entity " << entityCollected.GetIndex() << ":" << entityCollected.GetVersion() << "]" << std::endl;
+		}
+	}
+	std::cout << "[NO GROUP]: " << std::endl;
+	for (const ecs::Entity entityWithoutGroupByAny : entitiesWithoutGroupByAny)
+	{
+		std::cout << "entityCollected -> [Entity " << entityWithoutGroupByAny.GetIndex() << ":" << entityWithoutGroupByAny.GetVersion() << "]" << std::endl;
+	}
+
+	entitiesWithoutGroupByAny.clear();
+	entitiesCollectedAndGroupEntitiesWithAllByField.clear();
+
+	std::cout << std::endl << std::endl;
+#endif
+
+	//////////////////////////////////////////////////////////////////////////
+	// TEST 12: Destroy an entity and create it again, see the version updated
 
 
 #ifdef _DEBUG
-	std::cout << "TEST 9: Destroy an entity and create it again, The current version is: " << std::endl;
+	std::cout << "TEST 12: Destroy an entity and create it again, The current version is: " << std::endl;
 	std::cout << "npc0 = [Entity " << npc0.GetIndex() << ":" << npc0.GetVersion() << "]" << std::endl;
 
 	entityManager.DestroyEntity(npc0);

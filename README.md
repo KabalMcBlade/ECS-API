@@ -129,9 +129,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 - `componentManager.CollectEntitiesWithAll`
 	Collect in a std::vector the entities having **all/both** the component/s passed as template argument, like
 	```cpp
-	std::vector<ecs::Entity> entitiesCollected;
-	...
-	ecs::EntityCollector::CollectEntitiesWithAll<Transform, RigidBody, Health>(entitiesCollected);
+	std::vector<ecs::Entity> entitiesCollected = cs::EntityCollector::CollectEntitiesWithAll<Transform, RigidBody, Health>();
 	for (const ecs::Entity entityCollected : entitiesCollected)
 	{
 		// do something with entityCollected, the entity collect
@@ -141,9 +139,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 - `componentManager.CollectEntitiesWithAny`
 	Collect in a std::vector the entities having **any/either** the component/s passed as template argument, like
 	```cpp
-	std::vector<ecs::Entity> entitiesCollected;
-	...
-	ecs::EntityCollector::CollectEntitiesWithAny<Transform, RigidBody, Health, Render>(entitiesCollected);
+	std::vector<ecs::Entity> entitiesCollected = ecs::EntityCollector::CollectEntitiesWithAny<Transform, RigidBody, Health, Render>();
 	for (const ecs::Entity entityCollected : entitiesCollected)
 	{
 		// do something with entityCollected, the entity collect
@@ -153,15 +149,74 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 - `componentManager.CollectEntitiesWithNot`
 	Collect in a std::vector the entities **not** having **all/both** the component/s passed as template argument, like
 	```cpp
-	std::vector<ecs::Entity> entitiesCollected;
-	...
-	ecs::EntityCollector::CollectEntitiesWithNot<Health>(entitiesCollected);
+	std::vector<ecs::Entity> entitiesCollected = ecs::EntityCollector::CollectEntitiesWithNot<Health>(entitiesCollected);
 	for (const ecs::Entity entityCollected : entitiesCollected)
 	{
 		// do something with entityCollected, the entity collect
 	}
 	entitiesCollected.clear();
 	```
+- `componentManager.CollectAndGroupEntitiesWithAllByField`
+	This method collects the entities having **all/both** the component/s passed as template argument and <br />
+	grouping them in an unordered map, by a defined field in the struct having the same value across entities. <br />
+	To do so, your struct has to reflect this field such as, for example: <br />
+	```cpp
+	struct Health
+	{
+		using FieldType = float;	// want to group by float field type
+
+		float m_maxValue = 0.0f;
+		float m_currentValue = 0.0f;
+	};
+	```
+	Afterward, pass as first template argument this struct, so Health, and pass as parameter the field you want, such as m_currentValue:
+	```cpp
+	auto  entitiesCollectedAndGroupEntitiesWithAllByField = ecs::EntityCollector::CollectAndGroupEntitiesWithAllByField<Health, Render>(entityManager, componentManager, &Health::m_currentValue);
+	for (const auto& [key, entities] : entitiesCollectedAndGroupEntitiesWithAllByField)
+	{
+		// iterate by group
+		for (const auto& entityCollected : entities)
+		{
+			// do something with entityCollected, the entity collect
+		}
+	}
+	entitiesCollectedAndGroupEntitiesWithAllByField.clear();
+	```
+- `componentManager.CollectAndGroupEntitiesWithAnyByField`
+	This method collects the entities having **any/either** the component/s passed as template argument and <br />
+	grouping them in an unordered map, by a defined field in the struct having the same value across entities. <br />
+	If an entities has not such group (so struct), will be gathered in the output parameter _noGroupedEntities as std::vector<Entity>. <br />
+	To do so, your struct has to reflect this field such as, for example: <br />
+	```cpp
+	struct Health
+	{
+		using FieldType = float;	// want to group by float field type
+
+		float m_maxValue = 0.0f;
+		float m_currentValue = 0.0f;
+	};
+	```
+	Afterward, pass as first template argument this struct, so Health, and pass as parameter the field you want, such as m_currentValue:
+	```cpp
+	std::vector<ecs::Entity> entitiesWithoutGroupByAny;
+	auto  entitiesCollectedAndGroupEntitiesWithAnyByField = ecs::EntityCollector::CollectAndGroupEntitiesWithAnyByField<Health, Transform, Render>(entityManager, componentManager, &Health::m_currentValue, entitiesWithoutGroupByAny);
+	for (const auto& [key, entities] : entitiesCollectedAndGroupEntitiesWithAnyByField)
+	{
+		// iterate by group
+		for (const auto& entityCollected : entities)
+		{
+			// do something with entityCollected, the entity collect
+		}
+	}
+	// Entities having not Health struct
+	for (const ecs::Entity entityWithoutGroupByAny : entitiesWithoutGroupByAny)
+	{
+		std::cout << "entityCollected -> [Entity " << entityWithoutGroupByAny.GetIndex() << ":" << entityWithoutGroupByAny.GetVersion() << "]" << std::endl;
+	}
+	entitiesWithoutGroupByAny.clear();
+	entitiesCollectedAndGroupEntitiesWithAnyByField.clear();
+	```
+
 
 ## LICENSE
 

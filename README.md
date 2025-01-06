@@ -28,15 +28,9 @@ Is working on **64 bit platform only** due the usage of _BitScanForward64 (or __
 
 ## Important Compilation info
 
-**Due the nature of the library and where you can link this against to, you have to add the processor ECS_EXPORTS to avoid linkage error.**<br>
-**This library does not use precompiled headers**
-
-
-## How to import in your project
-
-A way is cloning this repository in your project, but in that case need to remove/exclude from your project everything apart the folder ECS-API/ECS, but is not very pretty, because git will notice the change.<br>
-A nice way instead, is simple to download or cloning this project somewhere locally and copy inside your own project the ECS folder containig ONLY the implementation of the API, the [ECS](ECS-API/ECS).<br>
-Anyway is up to you, is still very self contained library!
+When exporting the ECS library from a DLL project, remember to add the preprocessor macro ECS_DLL_EXPORT.<br>
+When importing the ECS library that was exported from a DLL project, remember to add the preprocessor macro ECS_DLL_IMPORT.<br>
+If you are not using dynamic libraries at all, such as in the same executable project or a static library, do not add any of the above macros!<br>
 
 
 ## How to use

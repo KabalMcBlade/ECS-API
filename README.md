@@ -214,7 +214,7 @@ Apart the aformetioned functions to initialise, destroy, register and unregister
 
 ## LICENSE
 
-GPL-3.0
+MIT
 
 
 # Build Status

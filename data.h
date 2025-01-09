@@ -49,7 +49,7 @@ struct RigidBody
 
 struct Health
 {
-	// this because I want to groupBy this
+	// this because I want to group by this
 	using FieldType = float;
 
 	float m_maxValue = 0.0f;

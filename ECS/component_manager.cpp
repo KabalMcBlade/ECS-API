@@ -1,3 +1,7 @@
+// Copyright (c) 2022-2025 Michele Condo'
+// File: C:\Projects\ECS-API\ECS\component_manager.cpp
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
 #include "component_manager.h"
 
 ECS_NAMESPACE_BEGIN

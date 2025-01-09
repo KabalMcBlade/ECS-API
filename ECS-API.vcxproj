@@ -162,6 +162,9 @@
     <ClInclude Include="ECS\utility.h" />
     <ClInclude Include="data.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ECS-API.licenseheader" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
